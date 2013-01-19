@@ -3,15 +3,7 @@ package org.sakaiproject.content.repository.logic;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Setter;
-
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.Element;
-
 import org.apache.log4j.Logger;
-
-import org.sakaiproject.content.repository.dao.ProjectDao;
-import org.sakaiproject.content.repository.logic.SakaiProxy;
 import org.sakaiproject.content.repository.model.Thing;
 
 /**
@@ -29,7 +21,7 @@ public class ProjectLogicImpl implements ProjectLogic {
 	 * {@inheritDoc}
 	 */
 	public Thing getThing(long id) {
-		
+		/*
 		//check cache 
 		Element element = cache.get(id);
 		if(element != null) {
@@ -50,20 +42,23 @@ public class ProjectLogicImpl implements ProjectLogic {
 		}
 
 		return t;
+		*/
+		return null;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public List<Thing> getThings() {
-		return dao.getThings();
+		return new ArrayList<Thing>();
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean addThing(Thing t) {
-		return dao.addThing(t);
+		//return dao.addThing(t);
+		return false;
 	}
 	
 	/**
@@ -72,11 +67,6 @@ public class ProjectLogicImpl implements ProjectLogic {
 	public void init() {
 		log.info("init");
 	}
-	
-	@Setter
-	private ProjectDao dao;
-	
-	@Setter
-	private Cache cache;
+
 
 }
