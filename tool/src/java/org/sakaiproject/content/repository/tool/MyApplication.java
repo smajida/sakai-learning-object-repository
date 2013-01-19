@@ -10,7 +10,7 @@ import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 
-import org.sakaiproject.content.repository.tool.pages.FirstPage;
+import org.sakaiproject.content.repository.tool.pages.BrowsePage;
 
 /**
  * Main application class for our app
@@ -40,8 +40,8 @@ public class MyApplication extends WebApplication {
 		getMarkupSettings().setDefaultAfterDisabledLink(null);
 				
 		// On Wicket session timeout, redirect to main page
-		getApplicationSettings().setPageExpiredErrorPage(FirstPage.class);
-		getApplicationSettings().setAccessDeniedPage(FirstPage.class);
+		getApplicationSettings().setPageExpiredErrorPage(BrowsePage.class);
+		getApplicationSettings().setAccessDeniedPage(BrowsePage.class);
 		
 		//to put this app into deployment mode, see web.xml
 		
@@ -67,8 +67,8 @@ public class MyApplication extends WebApplication {
 	 * 
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class<FirstPage> getHomePage() {
-		return FirstPage.class;
+	public Class<BrowsePage> getHomePage() {
+		return BrowsePage.class;
 	}
 	
 	

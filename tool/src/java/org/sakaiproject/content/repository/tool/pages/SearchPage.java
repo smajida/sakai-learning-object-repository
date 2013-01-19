@@ -24,12 +24,12 @@ import org.sakaiproject.content.repository.model.Thing;
  * @author Steve Swinsburg (steve.swinsburg@anu.edu.au)
  *
  */
-public class ThirdPage extends BasePage {
+public class SearchPage extends BasePage {
 
 	ThingsDataProvider provider;
 	
-	public ThirdPage() {
-		disableLink(thirdLink);
+	public SearchPage() {
+		disableLink(searchLink);
 		
 		//get list of items from db, wrapped in a dataprovider
 		provider = new ThingsDataProvider();

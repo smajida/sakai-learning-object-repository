@@ -41,9 +41,9 @@ public class BasePage extends WebPage implements IHeaderContributor {
 	@SpringBean(name="org.sakaiproject.content.repository.logic.ProjectLogic")
 	protected ProjectLogic projectLogic;
 	
-	Link<Void> firstLink;
-	Link<Void> secondLink;
-	Link<Void> thirdLink;
+	Link<Void> browseLink;
+	Link<Void> addLink;
+	Link<Void> searchLink;
 	
 	FeedbackPanel feedbackPanel;
 	
@@ -51,43 +51,32 @@ public class BasePage extends WebPage implements IHeaderContributor {
 		
 		log.debug("BasePage()");
 		
-		
-    	//first link
-		firstLink = new Link<Void>("firstLink") {
+		browseLink = new Link<Void>("browseLink") {
 			private static final long serialVersionUID = 1L;
 			public void onClick() {
-				setResponsePage(new FirstPage());
+				setResponsePage(new BrowsePage());
 			}
 		};
-		firstLink.add(new Label("firstLinkLabel",new ResourceModel("link.first")).setRenderBodyOnly(true));
-		firstLink.add(new AttributeModifier("title", true, new ResourceModel("link.first.tooltip")));
-		add(firstLink);
+		//browseLink.add(new Label("firstLinkLabel",new ResourceModel("link.first")).setRenderBodyOnly(true));
+		//browseLink.add(new AttributeModifier("title", true, new ResourceModel("link.first.tooltip")));
+		add(browseLink);
 		
-		
-		
-		//second link
-		secondLink = new Link<Void>("secondLink") {
+		addLink = new Link<Void>("addLink") {
 			private static final long serialVersionUID = 1L;
 			public void onClick() {
-				setResponsePage(new SecondPage());
+				setResponsePage(new AddPage());
 			}
 		};
-		secondLink.add(new Label("secondLinkLabel",new ResourceModel("link.second")).setRenderBodyOnly(true));
-		secondLink.add(new AttributeModifier("title", true, new ResourceModel("link.second.tooltip")));
-		add(secondLink);
+		add(addLink);
 		
 		
-		
-		//third link
-		thirdLink = new Link<Void>("thirdLink") {
+		searchLink = new Link<Void>("searchLink") {
 			private static final long serialVersionUID = 1L;
 			public void onClick() {
-				setResponsePage(new ThirdPage());
+				setResponsePage(new SearchPage());
 			}
 		};
-		thirdLink.add(new Label("thirdLinkLabel",new StringResourceModel("link.third", null, new String[] {"3"})).setRenderBodyOnly(true));
-		thirdLink.add(new AttributeModifier("title", true, new ResourceModel("link.third.tooltip")));
-		add(thirdLink);
+		add(searchLink);
 		
 		
 		// Add a FeedbackPanel for displaying our messages
