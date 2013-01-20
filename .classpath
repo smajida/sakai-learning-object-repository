@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="tool/src/java"/>
-	<classpathentry kind="src" path="impl/src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.16/log4j-1.2.16.jar">
 		<attributes>
@@ -15,5 +14,6 @@
 	<classpathentry kind="var" path="M2_REPO/org/apache/wicket/wicket/1.4.21/wicket-1.4.21.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/wicket/wicket-extensions/1.4.21/wicket-extensions-1.4.21.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/wicket/wicket-spring/1.4.21/wicket-spring-1.4.21.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

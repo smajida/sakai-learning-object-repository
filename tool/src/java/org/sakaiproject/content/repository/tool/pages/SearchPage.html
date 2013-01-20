@@ -4,33 +4,15 @@
 <body>
 <wicket:extend>
 		
-	<h3>Database items:</h3>
-	<table cellspacing="0" class="dataview">
-    <tbody>
-       <tr wicket:id="simple">
-         <td><span wicket:id="name">Test Name</span></td>
-       </tr>
-    </tbody>
-	</table>
-
-	<div wicket:id="navigator"></div>
+	<h3><wicket:message key="search.page.title">[Search]</wicket:message></h3>
 	
+	<div wicket:id="searchPanel">[search panel goes here]</div>
 	
-	<h3>Add a new item to the database:</h3>
-	<form wicket:id="form">
-		Name: <input type="text" wicket:id="name" />
-		<input type="submit"/>
-	</form>
+	<br />
+	<small>
+		<a wicket:id="modeLink"><span wicket:id="modeLabel">[search mode link]</span></a>
+	</small>
 	
-	<style type="text/css">
-	/* style the Wicket FeedbackPanel to remove the list */
-	.alertMessage ul, .success ul {
-		list-style-type: none !important;
-		margin-left: -40px;
-		margin-bottom: 0px;
-		margin-top: 0px;
-	}
-	</style>
 	
 </wicket:extend>
 </body>

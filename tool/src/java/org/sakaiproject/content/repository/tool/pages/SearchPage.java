@@ -1,193 +1,68 @@
 package org.sakaiproject.content.repository.tool.pages;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
-import org.apache.wicket.markup.repeater.DefaultItemReuseStrategy;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.IDataProvider;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
-
-import org.sakaiproject.content.repository.model.Thing;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.ResourceModel;
+import org.sakaiproject.content.repository.tool.panels.SimpleSearchPanel;
 
 /**
- * An example page. This interacts with a list of items from the database
+ * Search page
  * 
- * @author Steve Swinsburg (steve.swinsburg@anu.edu.au)
+ * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
  */
 public class SearchPage extends BasePage {
 
-	ThingsDataProvider provider;
+	private boolean advancedMode=false;
 	
 	public SearchPage() {
 		disableLink(searchLink);
 		
-		//get list of items from db, wrapped in a dataprovider
-		provider = new ThingsDataProvider();
+		if(advancedMode) {
+			//add advanced panel
+			
+		} else {
+			//add simple panel
+			add(new SimpleSearchPanel("searchPanel"));
+
+		}
 		
-		//present the data in a table
-		final DataView<Thing> dataView = new DataView<Thing>("simple", provider) {
-
-			@Override
-			public void populateItem(final Item item) {
-                final Thing thing = (Thing) item.getModelObject();
-                item.add(new Label("name", thing.getName()));
-            }
-        };
-        dataView.setItemReuseStrategy(new DefaultItemReuseStrategy());
-        dataView.setItemsPerPage(5);
-        add(dataView);
-
-        //add a pager to our table, only visible if we have more than 5 items
-        add(new PagingNavigator("navigator", dataView) {
-        	
-        	@Override
-        	public boolean isVisible() {
-        		if(provider.size() > 5) {
-        			return true;
-        		}
-        		return false;
-        	}
-        	
-        	@Override
-        	public void onBeforeRender() {
-        		super.onBeforeRender();
-        		
-        		//clear the feedback panel messages
-        		clearFeedback(feedbackPanel);
-        	}
-        });
-        
-        //add our form
-        add(new ThingForm("form", new Thing()));
-        
+		add(new SwitchModeLink("modeLink"));
+		
 	}
 	
+	
 	/**
-	 * Form for adding a new Thing. It is automatically linked up if the form fields match the object fields
+	 * Link for switching mode
 	 */
-	private class ThingForm extends Form {
-	   
-		public ThingForm(String id, Thing thing) {
-	        super(id, new CompoundPropertyModel(thing));
-	        add(new TextField("name"));
-	    }
-		
-		@Override
-        public void onSubmit(){
-			Thing t = (Thing)getDefaultModelObject();
+	private class SwitchModeLink extends Link<Void> {
+
+		public SwitchModeLink(String id) {
+			super(id);
 			
-			if(projectLogic.addThing(t)){
-				info("Item added");
+			//set label depending on context
+			if(advancedMode) {
+				add(new Label("modeLabel", new ResourceModel("search.mode.text.simple")));
 			} else {
-				error("Error adding item");
+				add(new Label("modeLabel", new ResourceModel("search.mode.text.advanced")));
 			}
-        }
-	}
-	
-	/**
-	 * DataProvider to manage our list
-	 * 
-	 */
-	private class ThingsDataProvider implements IDataProvider<Thing> {
-	   
-		private List<Thing> list;
-		
-		private List<Thing> getData() {
-			if(list == null) {
-				list = projectLogic.getThings();
-				Collections.reverse(list);
-			}
-			return list;
-		}
-		
-		
-		@Override
-		public Iterator<Thing> iterator(int first, int count){
-			return getData().subList(first, first + count).iterator();
 		}
 
 		@Override
-		public int size(){
-			return getData().size();
-		}
-
-		@Override
-		public IModel<Thing> model(Thing object){
-			return new DetachableThingModel(object);
-		}
-
-		@Override
-		public void detach(){
-			list = null;
-		}
-	}
-	
-	/**
-	 * Detachable model to wrap a Thing
-	 * 
-	 */
-	private class DetachableThingModel extends LoadableDetachableModel<Thing>{
-
-		private final long id;
-		
-		/**
-		 * @param m
-		 */
-		public DetachableThingModel(Thing t){
-			this.id = t.getId();
-		}
-		
-		/**
-		 * @param id
-		 */
-		public DetachableThingModel(long id){
-			this.id = id;
-		}
-		
-		/**
-		 * @see java.lang.Object#hashCode()
-		 */
-		public int hashCode() {
-			return Long.valueOf(id).hashCode();
-		}
-		
-		/**
-		 * used for dataview with ReuseIfModelsEqualStrategy item reuse strategy
-		 * 
-		 * @see org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		public boolean equals(final Object obj){
-			if (obj == this){
-				return true;
-			}
-			else if (obj == null){
-				return false;
-			}
-			else if (obj instanceof DetachableThingModel) {
-				DetachableThingModel other = (DetachableThingModel)obj;
-				return other.id == id;
-			}
-			return false;
-		}
-		
-		/**
-		 * @see org.apache.wicket.model.LoadableDetachableModel#load()
-		 */
-		protected Thing load(){
+		public void onClick() {
 			
-			// get the thing
-			return projectLogic.getThing(id);
+			//switch panels to load in the appropriate search form
+
+			if(advancedMode) {
+				//load in simple mode panel
+			}
+			
+			System.out.println("Not yet implemented");
+			
 		}
+		
+		
+		
 	}
+	
 }
