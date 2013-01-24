@@ -10,10 +10,14 @@
 	<classpathentry kind="var" path="M2_REPO/org/springframework/spring/2.5.6.SEC02/spring-2.5.6.SEC02.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-configuration/commons-configuration/1.6/commons-configuration-1.6.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/sakaiproject/kernel/sakai-component-manager/1.4.0-SNAPSHOT/sakai-component-manager-1.4.0-SNAPSHOT.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/projectlombok/lombok/0.11.6/lombok-0.11.6.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/wicket/wicket/1.4.21/wicket-1.4.21.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/wicket/wicket-extensions/1.4.21/wicket-extensions-1.4.21.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/wicket/wicket-spring/1.4.21/wicket-spring-1.4.21.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/sakaiproject/kernel/sakai-kernel-api/1.4.0-SNAPSHOT/sakai-kernel-api-1.4.0-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/sakaiproject/kernel/sakai-kernel-util/1.4.0-SNAPSHOT/sakai-kernel-util-1.4.0-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/sakaiproject/search/search-api/1.5-SNAPSHOT/search-api-1.5-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/projectlombok/lombok/0.11.6/lombok-0.11.6.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 /**
  * An example thing
  * 
- * @author Steve Swinsburg (steve.swinsburg@anu.edu.au)
+ * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Thing implements Serializable {
+public class SearchItem implements Serializable {
 
 	private long id;
 	private String name;

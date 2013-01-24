@@ -15,7 +15,7 @@ import org.sakaiproject.content.repository.tool.pages.BrowsePage;
 /**
  * Main application class for our app
  * 
- * @author Steve Swinsburg (steve.swinsburg@anu.edu.au)
+ * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
  */
 public class MyApplication extends WebApplication {    

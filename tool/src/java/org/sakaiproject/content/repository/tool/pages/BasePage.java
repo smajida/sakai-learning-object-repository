@@ -1,7 +1,6 @@
 package org.sakaiproject.content.repository.tool.pages;
 
 import org.apache.log4j.Logger;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
@@ -9,16 +8,11 @@ import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-
 import org.sakaiproject.content.repository.logic.ProjectLogic;
-import org.sakaiproject.content.repository.logic.SakaiProxy;
 
 
 /**
@@ -28,18 +22,15 @@ import org.sakaiproject.content.repository.logic.SakaiProxy;
  * 
  * <p>It also allows us to setup the API injection and any other common methods, which are then made available in the other pages.
  * 
- * @author Steve Swinsburg (steve.swinsburg@anu.edu.au)
+ * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
  */
 public class BasePage extends WebPage implements IHeaderContributor {
 
 	private static final Logger log = Logger.getLogger(BasePage.class); 
 	
-	@SpringBean(name="org.sakaiproject.content.repository.logic.SakaiProxy")
-	protected SakaiProxy sakaiProxy;
-	
 	@SpringBean(name="org.sakaiproject.content.repository.logic.ProjectLogic")
-	protected ProjectLogic projectLogic;
+	protected ProjectLogic logic;
 	
 	Link<Void> browseLink;
 	Link<Void> addLink;
@@ -139,8 +130,8 @@ public class BasePage extends WebPage implements IHeaderContributor {
 		
 		
 		//get Sakai skin
-		String skinRepo = sakaiProxy.getSkinRepoProperty();
-		String toolCSS = sakaiProxy.getToolSkinCSS(skinRepo);
+		String skinRepo = logic.getSkinRepoProperty();
+		String toolCSS = logic.getToolSkinCSS(skinRepo);
 		String toolBaseCSS = skinRepo + "/tool_base.css";
 		
 		//Sakai additions

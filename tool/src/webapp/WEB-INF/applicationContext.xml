@@ -5,12 +5,14 @@
 
 	<!-- TODO: all of this should move to resource injection -->
 
-	<!--  SakaiProxy -->
- 	<bean id="org.sakaiproject.content.repository.logic.SakaiProxy"
-    	class="org.sakaiproject.content.repository.logic.SakaiProxyImpl"
-        init-method="init">
-        
-        <!-- API injection -->
+	
+	
+	<!-- ProjectLogic -->
+	<bean id="org.sakaiproject.content.repository.logic.ProjectLogic"
+    	class="org.sakaiproject.content.repository.logic.ProjectLogic"
+    	init-method="init">
+		
+		<!-- API injection -->
         <property name="securityService" ref="org.sakaiproject.authz.api.SecurityService" />
         <property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
         <property name="toolManager" ref="org.sakaiproject.tool.api.ToolManager" />
@@ -18,13 +20,8 @@
 		<property name="eventTrackingService" ref="org.sakaiproject.event.api.EventTrackingService" />
 		<property name="serverConfigurationService" ref="org.sakaiproject.component.api.ServerConfigurationService" />
 		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		
-	</bean>
-	
-	<!-- ProjectLogic -->
-	<bean id="org.sakaiproject.content.repository.logic.ProjectLogic"
-    	class="org.sakaiproject.content.repository.logic.ProjectLogicImpl"
-    	init-method="init">
+		<property name="searchService" ref="org.sakaiproject.search.api.SearchService" />
+		 
     	    	
     </bean>
     

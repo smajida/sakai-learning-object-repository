@@ -4,6 +4,8 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.sakaiproject.content.repository.logic.ProjectLogic;
 import org.sakaiproject.content.repository.model.SimpleSearch;
 
 /**
@@ -14,6 +16,9 @@ import org.sakaiproject.content.repository.model.SimpleSearch;
  */
 public class SimpleSearchPanel extends Panel {
 
+	@SpringBean(name="org.sakaiproject.content.repository.logic.ProjectLogic")
+	private ProjectLogic logic;
+	
 	/**
 	 * Constructor for new instance
 	 * @param id	component id
@@ -48,6 +53,9 @@ public class SimpleSearchPanel extends Panel {
 			
 			SimpleSearch s = (SimpleSearch) getDefaultModelObject();
 			System.out.println("Searched for: " + s.getSearchString());
+			
+			logic.performSearch(s.getSearchString());
+			
 		}
 	}
 	
