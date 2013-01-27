@@ -1,19 +1,25 @@
 package org.sakaiproject.content.repository.logic;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.apachecommons.CommonsLog;
 
+import org.apache.commons.lang.StringUtils;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.component.api.ServerConfigurationService;
+import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.repository.model.SearchItem;
 import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.search.api.InvalidSearchQueryException;
 import org.sakaiproject.search.api.SearchList;
+import org.sakaiproject.search.api.SearchResult;
 import org.sakaiproject.search.api.SearchService;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.SessionManager;
@@ -52,6 +58,9 @@ public class ProjectLogic {
 	
 	@Getter @Setter
 	private SearchService searchService;
+	
+	@Getter @Setter
+	private ContentHostingService contentHostingService;
 	
 	
 	/**
@@ -165,9 +174,32 @@ public class ProjectLogic {
 		}
 		log.debug("Search results:" + l.size());
 		
-		//convert search result list into internal object list
 		List<SearchItem> items = new ArrayList<SearchItem>();
 		
+		Iterator iter = l.iterator();
+		while(iter.hasNext()){
+			SearchResult r = (SearchResult) iter.next();
+			
+			SearchItem si = new SearchItem();
+			si.setTitle(r.getTitle());
+			si.setUrl(r.getUrl());
+			
+			try {
+				si.setPreview(r.getSearchResult());
+			} catch (Exception e){
+				//we dont care, it just wont be set
+			}
+			
+			try {
+				System.out.println("terms:" + Arrays.asList(r.getTerms().getTerms()));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			items.add(si);
+			
+		}
 		
 		return items;
 		

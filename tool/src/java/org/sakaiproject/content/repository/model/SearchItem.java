@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * An example thing
+ * Data to model a search result item
  * 
  * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SearchItem implements Serializable {
 
-	private long id;
-	private String name;
+	private String title;
+	private String url;
+	private String preview;
 }

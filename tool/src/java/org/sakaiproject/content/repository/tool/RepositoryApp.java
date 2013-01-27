@@ -9,7 +9,6 @@ import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-
 import org.sakaiproject.content.repository.tool.pages.BrowsePage;
 
 /**
@@ -18,8 +17,10 @@ import org.sakaiproject.content.repository.tool.pages.BrowsePage;
  * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
  */
-public class MyApplication extends WebApplication {    
+public class RepositoryApp extends WebApplication {    
    
+	public static final int MAX_ITEMS_PER_PAGE = 5;
+	
 	/**
 	 * Configure your app here
 	 */
@@ -75,7 +76,7 @@ public class MyApplication extends WebApplication {
 	/**
      * Constructor
      */
-	public MyApplication()
+	public RepositoryApp()
 	{
 	}
 	

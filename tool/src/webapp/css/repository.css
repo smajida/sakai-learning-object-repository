@@ -1,0 +1,16 @@
+.search-result-wrap {
+	margin-bottom: 20px;
+}
+
+.search-result-title {
+	font-size: large;
+}
+
+.search-result-url {
+	color: green;
+	font-size:small;
+}
+
+.search-result-preview {
+	font-size:small;
+}

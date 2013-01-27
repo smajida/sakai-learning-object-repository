@@ -19,5 +19,7 @@
 	<classpathentry kind="var" path="M2_REPO/org/sakaiproject/search/search-api/1.5-SNAPSHOT/search-api-1.5-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/projectlombok/lombok/0.11.6/lombok-0.11.6.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/wicket/wicket-ioc/1.4.21/wicket-ioc-1.4.21.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.6/commons-lang-2.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
