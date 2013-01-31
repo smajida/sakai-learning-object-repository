@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
  *
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class SearchItem implements Serializable {
 
 	private String title;

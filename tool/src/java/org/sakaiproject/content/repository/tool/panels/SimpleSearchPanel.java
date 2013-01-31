@@ -81,16 +81,4 @@ public class SimpleSearchPanel extends Panel {
 		}
 	}
 	
-	private void updateResultsPanel(String s){
-		
-		Panel p;
-		if(StringUtils.isBlank(s)){
-			p = new EmptyPanel("results");
-		} else {
-			System.out.println("Searched for: " + s.getSearchString());
-			p = new SearchResultsPanel("results",logic.performSearch(s.getSearchString()));
-		}
-		}
-	}
-	
 }

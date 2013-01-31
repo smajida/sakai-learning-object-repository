@@ -15,7 +15,10 @@ import org.apache.commons.lang.StringUtils;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentHostingService;
+import org.sakaiproject.content.api.ContentResource;
+import org.sakaiproject.content.repository.model.ContentItem;
 import org.sakaiproject.content.repository.model.SearchItem;
+import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.search.api.InvalidSearchQueryException;
 import org.sakaiproject.search.api.SearchList;
@@ -205,5 +208,35 @@ public class ProjectLogic {
 		
 	}
 	
+	/**
+	 * Get a list of all resources in the current site.
+	 * 
+	 * Transroms from the Sakai ContentResource to an internal ContentItem
+	 * 
+	 * @return
+	 */
+	public List<ContentItem> getResources() {
+		
+		List<ContentItem> items = new ArrayList<ContentItem>();
+		
+		String currentSiteCollectionId = contentHostingService.getSiteCollection(getCurrentSiteId());
+		log.debug("currentSiteCollectionId: " + currentSiteCollectionId);
+		
+		List<ContentResource> resources = contentHostingService.getAllResources(currentSiteCollectionId);
+		
+		for(ContentResource resource: resources) {
+			
+			ContentItem item = new ContentItem();
+			item.setSize(resource.getContentLength());
+			item.setUrl(resource.getUrl());
+			item.setMimeType(resource.getContentType());
+			item.setTitle(resource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
+
+			items.add(item);
+		}
+		
+		
+		return items;
+	}
 
 }

@@ -23,11 +23,12 @@ public class SearchResultsPanel extends Panel {
 	public SearchResultsPanel(String id, List<SearchItem> results) {
 		super(id);
 		
-		if(results.size() == 0){
-			add(new Label("count", new StringResourceModel("search.results.num.many", null, null, new Object[]{0})));
-		} else if(results.size() == 1){
+		//if 0 or many, or if 1.
+		if(results.size() == 0 || results.size() > 1){
+			add(new Label("count", new StringResourceModel("search.results.num.many", null, null, new Object[]{results.size()})));
+		} else {
 			add(new Label("count", new ResourceModel("search.results.num.1")));
-		}
+		} 
 				
 		//display results
 		add(new PageableListView<SearchItem>("data", results, RepositoryApp.MAX_ITEMS_PER_PAGE) {			

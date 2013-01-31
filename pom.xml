@@ -3,7 +3,7 @@
 	
 	<modelVersion>4.0.0</modelVersion>
 	
-	<name>repository - Base</name>
+	<name>Content Repository</name>
 	<groupId>org.sakaiproject.content.repository</groupId>
 	<artifactId>repository</artifactId>
 	

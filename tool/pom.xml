@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 	
-	<name>repository - Tool</name>
+	<name>Content Repository :: Tool</name>
 	<groupId>org.sakaiproject.content.repository</groupId>
 	<artifactId>repository-tool</artifactId>
 	

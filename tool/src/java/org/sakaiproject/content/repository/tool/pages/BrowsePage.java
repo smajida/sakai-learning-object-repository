@@ -13,5 +13,6 @@ public class BrowsePage extends BasePage {
 	public BrowsePage() {
 		disableLink(browseLink);
 		
+		logic.getResources();
 	}
 }
