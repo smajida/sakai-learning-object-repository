@@ -31,7 +31,7 @@ public class SearchResultsPanel extends Panel {
 		} 
 				
 		//display results
-		add(new PageableListView<SearchItem>("data", results, RepositoryApp.MAX_ITEMS_PER_PAGE) {			
+		add(new PageableListView<SearchItem>("data", results, RepositoryApp.MAX_SEARCH_ITEMS_PER_PAGE) {			
 			protected void populateItem(final ListItem<SearchItem> item) {
 				SearchItem si = (SearchItem)item.getModelObject();
 				

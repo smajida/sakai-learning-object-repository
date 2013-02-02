@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,10 +24,10 @@ import org.sakaiproject.search.api.SearchList;
 import org.sakaiproject.search.api.SearchResult;
 import org.sakaiproject.search.api.SearchService;
 import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.time.api.Time;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiproject.user.api.UserDirectoryService;
+import org.sakaiproject.user.api.UserNotDefinedException;
 
 /**
  * Logic class for our app.
@@ -246,13 +245,17 @@ public class ProjectLogic {
 	}
 
 	/**
-	 * Helper to convert Sakai Time into Date
-	 * @param t Time object
+	 * Get the display name of a user
+	 * 
+	 * @param uuid 
 	 * @return
 	 */
-	private Date toDate(Time t) {
-		Date d = new Date(t.getTime());
-		return d;
+	public String getUserDisplayName(String uuid) {
+		try {
+			return userDirectoryService.getUser(uuid).getDisplayName();
+		} catch (UserNotDefinedException e){
+			return uuid;
+		}
 	}
 	
 }

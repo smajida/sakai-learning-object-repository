@@ -25,7 +25,8 @@ import org.sakaiproject.util.ResourceLoader;
  */
 public class RepositoryApp extends WebApplication {    
    
-	public static final int MAX_ITEMS_PER_PAGE = 5;
+	public static final int MAX_SEARCH_ITEMS_PER_PAGE = 5;
+	public static final int MAX_CONTENT_ITEMS_PER_PAGE = 100;
 	public static final String CONTENT_IMAGE_BASE_URL = "/library/image/";
 	public static final String CONTENT_IMAGE_DEFAULT = "sakai/generic.gif";
 	

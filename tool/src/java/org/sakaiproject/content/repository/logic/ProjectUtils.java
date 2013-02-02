@@ -1,10 +1,13 @@
 package org.sakaiproject.content.repository.logic;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.sakaiproject.util.ResourceLoader;
 
@@ -17,18 +20,23 @@ import org.sakaiproject.util.ResourceLoader;
 public class ProjectUtils {
 
 	/**
-	 * Convert milliseconds string into a localised date string
-	 * @param millis	String of the milliseconds
+	 * Convert timestamp string into a localised date string
+	 * @param timestamp		timestamp of format 20130124101010761
 	 * @return
 	 */
-	public static String toDateStringFromResources(String millis) {
-				
+	public static String toDateStringFromResources(String timestamp) {
 		
-		//format 20130124101010761
-		//need to ajust this
-		Date d = new Date(NumberUtils.toLong(millis));
-		
-		DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+		//input
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
+		Date d = null;
+		try {
+			d = format.parse(timestamp);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+						
+		//output
+		DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
 		String s = formatter.format(d);
 
 		return s;
@@ -43,6 +51,15 @@ public class ProjectUtils {
 	public static Locale getUserPreferredLocale() {
 		ResourceLoader rl = new ResourceLoader();
 		return rl.getLocale();
+	}
+	
+	/**
+	 * Format a file size into a display string
+	 * @param size	file size
+	 * @return
+	 */
+	public static String formatSize(long size) {
+		return FileUtils.byteCountToDisplaySize(size);
 	}
 	
 }

@@ -4,16 +4,15 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PageableListView;
+import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.content.repository.logic.ProjectLogic;
 import org.sakaiproject.content.repository.logic.ProjectUtils;
 import org.sakaiproject.content.repository.model.ContentItem;
-import org.sakaiproject.content.repository.model.SearchItem;
 import org.sakaiproject.content.repository.tool.RepositoryApp;
 import org.sakaiproject.content.repository.tool.components.ExternalImage;
 
@@ -34,18 +33,20 @@ public class BrowsePanel extends Panel{
 		List<ContentItem> items = logic.getResources();
 		
 		//display results
-		add(new PageableListView<ContentItem>("data", items, RepositoryApp.MAX_ITEMS_PER_PAGE) {			
+		PageableListView list = new PageableListView<ContentItem>("data", items, RepositoryApp.MAX_CONTENT_ITEMS_PER_PAGE) {			
 			protected void populateItem(final ListItem<ContentItem> item) {
 				ContentItem ci = (ContentItem)item.getModelObject();
 				
 				item.add(new ExternalLink("iconLink", ci.getUrl()).add(new ExternalImage("icon", getImageUrl(ci.getMimeType()))));
 				item.add(new ExternalLink("titleLink", ci.getUrl()).add(new Label("title", ci.getTitle())));
-				item.add(new Label("author", ci.getAuthor()));
+				item.add(new Label("author", logic.getUserDisplayName(ci.getAuthor())));
 				item.add(new Label("modifiedDate", ProjectUtils.toDateStringFromResources(ci.getModifiedDate())));
-				item.add(new Label("size", String.valueOf(ci.getSize())));
+				item.add(new Label("size", ProjectUtils.formatSize(ci.getSize())));
 			
 			}
-		});
+		};
+		add(list);
+		add(new PagingNavigator("pager", list));
 		
 	}
 	

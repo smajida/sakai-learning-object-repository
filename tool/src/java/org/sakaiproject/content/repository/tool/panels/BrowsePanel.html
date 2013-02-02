@@ -1,7 +1,7 @@
 
 <wicket:panel>
 
-<table cellspacing="0">
+<table cellspacing="0" class="listHier lines centerLines">
 	
 	<thead>
 		<tr>
@@ -11,11 +11,11 @@
 			<th><wicket:message key="browse.modified" /></th>
 			<th><wicket:message key="browse.size" /></th>
 			
-	</tr>
+		</tr>
 	</thead>
 	
 	<tbody>
-		<tr wicket:id="data" class="browse-item-wrap">
+		<tr wicket:id="data">
 			<td>
 				<a wicket:id="iconLink"><img wicket:id="icon" class="browse-item-image"/></a>
 			</td>
@@ -32,9 +32,9 @@
 				<span wicket:id="size" class="browse-item-size">[size]</span>
 			</td>
 			
-			
 		</tr>
 	</tbody>
+	<div wicket:id="pager" />
 	
 </table>
 
