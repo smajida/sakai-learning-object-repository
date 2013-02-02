@@ -1,6 +1,10 @@
 package org.sakaiproject.content.repository.model;
 
+import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * Data to model a content item
@@ -9,10 +13,14 @@ import lombok.Data;
  *
  */
 @Data
-public class ContentItem {
+@ToString
+public class ContentItem implements Serializable {
 
 	private String title;
 	private String url;
 	private long size;
 	private String mimeType;
+	private String author;
+	private String modifiedDate; //stores milliseconds as a String
+
 }

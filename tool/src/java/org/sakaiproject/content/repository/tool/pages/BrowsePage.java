@@ -1,5 +1,7 @@
 package org.sakaiproject.content.repository.tool.pages;
 
+import org.sakaiproject.content.repository.tool.panels.BrowsePanel;
+
 
 /**
  * Browse page
@@ -13,6 +15,6 @@ public class BrowsePage extends BasePage {
 	public BrowsePage() {
 		disableLink(browseLink);
 		
-		logic.getResources();
+		add(new BrowsePanel("browsePanel"));
 	}
 }

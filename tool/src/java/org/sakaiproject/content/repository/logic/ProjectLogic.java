@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -11,7 +12,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.apachecommons.CommonsLog;
 
-import org.apache.commons.lang.StringUtils;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentHostingService;
@@ -25,6 +25,7 @@ import org.sakaiproject.search.api.SearchList;
 import org.sakaiproject.search.api.SearchResult;
 import org.sakaiproject.search.api.SearchService;
 import org.sakaiproject.site.api.SiteService;
+import org.sakaiproject.time.api.Time;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiproject.user.api.UserDirectoryService;
@@ -232,6 +233,11 @@ public class ProjectLogic {
 			item.setMimeType(resource.getContentType());
 			item.setTitle(resource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
 
+			item.setAuthor(resource.getProperties().getProperty(ResourceProperties.PROP_CREATOR));
+			item.setModifiedDate(resource.getProperties().getProperty(ResourceProperties.PROP_MODIFIED_DATE));
+
+			System.out.println(item.toString());
+						
 			items.add(item);
 		}
 		
@@ -239,4 +245,14 @@ public class ProjectLogic {
 		return items;
 	}
 
+	/**
+	 * Helper to convert Sakai Time into Date
+	 * @param t Time object
+	 * @return
+	 */
+	private Date toDate(Time t) {
+		Date d = new Date(t.getTime());
+		return d;
+	}
+	
 }

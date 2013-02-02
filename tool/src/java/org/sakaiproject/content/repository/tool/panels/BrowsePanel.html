@@ -1,0 +1,41 @@
+
+<wicket:panel>
+
+<table cellspacing="0">
+	
+	<thead>
+		<tr>
+			<th>&nbsp;</th>
+			<th><wicket:message key="browse.title" /></th>
+			<th><wicket:message key="browse.author" /></th>
+			<th><wicket:message key="browse.modified" /></th>
+			<th><wicket:message key="browse.size" /></th>
+			
+	</tr>
+	</thead>
+	
+	<tbody>
+		<tr wicket:id="data" class="browse-item-wrap">
+			<td>
+				<a wicket:id="iconLink"><img wicket:id="icon" class="browse-item-image"/></a>
+			</td>
+			<td>
+				<a wicket:id="titleLink"><span wicket:id="title" class="browse-item-title">[title]</span></a>
+			</td>
+			<td>
+				<span wicket:id="author" class="browse-item-author">[author]</span>
+			</td>
+			<td>
+				<span wicket:id="modifiedDate" class="browse-item-modified-date">[modified date]</span>
+			</td>
+			<td>
+				<span wicket:id="size" class="browse-item-size">[size]</span>
+			</td>
+			
+			
+		</tr>
+	</tbody>
+	
+</table>
+
+</wicket:panel>

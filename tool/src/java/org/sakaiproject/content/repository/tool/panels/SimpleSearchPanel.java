@@ -16,7 +16,7 @@ import org.sakaiproject.search.api.SearchResult;
 /**
  * Panel for the simple search
  * 
- * @author Stevbe Swinsburg (steve.swinsburg@gmail.com)
+ * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
  */
 public class SimpleSearchPanel extends Panel {

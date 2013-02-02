@@ -1,5 +1,8 @@
 package org.sakaiproject.content.repository.tool;
 
+import java.util.Locale;
+
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
@@ -8,8 +11,11 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.resource.loader.BundleStringResourceLoader;
+import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.sakaiproject.content.repository.tool.pages.BrowsePage;
+import org.sakaiproject.util.ResourceLoader;
 
 /**
  * Main application class for our app
@@ -20,6 +26,8 @@ import org.sakaiproject.content.repository.tool.pages.BrowsePage;
 public class RepositoryApp extends WebApplication {    
    
 	public static final int MAX_ITEMS_PER_PAGE = 5;
+	public static final String CONTENT_IMAGE_BASE_URL = "/library/image/";
+	public static final String CONTENT_IMAGE_DEFAULT = "sakai/generic.gif";
 	
 	/**
 	 * Configure your app here
@@ -44,6 +52,9 @@ public class RepositoryApp extends WebApplication {
 		getApplicationSettings().setPageExpiredErrorPage(BrowsePage.class);
 		getApplicationSettings().setAccessDeniedPage(BrowsePage.class);
 		
+		// Add a custom resource loader for the extra properties file
+		getResourceSettings().addStringResourceLoader(new ContentTypeImagesResourceLoader());		
+		
 		//to put this app into deployment mode, see web.xml
 		
 	}
@@ -61,6 +72,21 @@ public class RepositoryApp extends WebApplication {
 				throw e;
 			}
 		};
+	}
+	
+	//Custom resource loader for the images properties
+	private static class ContentTypeImagesResourceLoader implements IStringResourceLoader {
+		
+		private ResourceLoader messages = new ResourceLoader("content_type_images");
+		
+		public String loadStringResource(Component component, String key) {
+			return messages.getString(key);
+		}
+
+		public String loadStringResource(Class clazz, String key, Locale locale, String style) {
+			return messages.getString(key);
+		}
+
 	}
 	
 	/**
