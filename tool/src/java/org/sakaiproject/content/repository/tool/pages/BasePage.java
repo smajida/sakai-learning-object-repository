@@ -1,6 +1,7 @@
 package org.sakaiproject.content.repository.tool.pages;
 
 import org.apache.log4j.Logger;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
@@ -152,8 +153,8 @@ public class BasePage extends WebPage implements IHeaderContributor {
 	 * Helper to disable a link. Add the Sakai class 'current'.
 	 */
 	protected void disableLink(Link<Void> l) {
-		l.add(new AttributeAppender("class", new Model<String>("current"), " "));
-		l.setRenderBodyOnly(true);
+		l.add(new SimpleAttributeModifier("class", "current"));
+		//l.setRenderBodyOnly(true);
 		l.setEnabled(false);
 	}
 	

@@ -22,5 +22,6 @@ public class ContentItem implements Serializable {
 	private String mimeType;
 	private String author;
 	private String modifiedDate; //stores milliseconds as a String
+	private int revision;
 
 }

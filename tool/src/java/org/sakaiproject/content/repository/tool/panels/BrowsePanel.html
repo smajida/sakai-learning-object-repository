@@ -1,35 +1,37 @@
 
 <wicket:panel>
 
-<table cellspacing="0" class="listHier lines centerLines">
-	
-	<thead>
-		<tr>
-			<th>&nbsp;</th>
-			<th><wicket:message key="browse.title" /></th>
-			<th><wicket:message key="browse.author" /></th>
-			<th><wicket:message key="browse.modified" /></th>
-			<th><wicket:message key="browse.size" /></th>
-			
-		</tr>
-	</thead>
+<table cellspacing="0" class="listHier lines">
 	
 	<tbody>
+		<tr>
+			<th style="border:none;">&nbsp;</th>
+			<th style="border:none;"><wicket:message key="browse.title" /></th>
+			<th style="border:none;"><wicket:message key="browse.revision" /></th>
+			<th style="border:none;"><wicket:message key="browse.author" /></th>
+			<th style="border:none;"><wicket:message key="browse.modified" /></th>
+			<th style="border:none;"><wicket:message key="browse.size" /></th>
+			
+		</tr>
+	
 		<tr wicket:id="data">
-			<td>
-				<a wicket:id="iconLink"><img wicket:id="icon" class="browse-item-image"/></a>
+			<td class="browse-icon">
+				<a wicket:id="iconLink"><img wicket:id="icon"/></a>
 			</td>
 			<td>
-				<a wicket:id="titleLink"><span wicket:id="title" class="browse-item-title">[title]</span></a>
+				<a wicket:id="titleLink"><span wicket:id="title">[title]</span></a>
 			</td>
 			<td>
-				<span wicket:id="author" class="browse-item-author">[author]</span>
+				<span wicket:id="revision">[revision]</span>
 			</td>
 			<td>
-				<span wicket:id="modifiedDate" class="browse-item-modified-date">[modified date]</span>
+				<span wicket:id="author">[author]</span>
 			</td>
 			<td>
-				<span wicket:id="size" class="browse-item-size">[size]</span>
+				<span wicket:id="modifiedDate">[modified date]</span>
+			</td>
+			<td>
+				<span wicket:id="size">[size]</span>
 			</td>
 			
 		</tr>

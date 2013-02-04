@@ -6,6 +6,12 @@
 	
 	<h3><wicket:message key="browse.page.title">[Browse]</wicket:message></h3>
 	
+	<form wicket:id="form">
+		<input type="text" wicket:id="searchString" wicket:message="placeholder:filter.form.text" size="30"/>
+		<input type="submit" wicket:message="value:action.filter" />
+		<a wicket:id="reset"><wicket:message key="action.clear">[action.clear]</wicket:message></a>
+	</form>
+	
 	<div wicket:id="browsePanel">[browse panel goes here]</div>
 	
 	

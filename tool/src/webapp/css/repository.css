@@ -14,3 +14,9 @@
 .search-result-preview {
 	font-size:small;
 }
+
+.browse-icon {
+	width: 24px;
+	text-align:center;
+	padding: 0 !important;
+}

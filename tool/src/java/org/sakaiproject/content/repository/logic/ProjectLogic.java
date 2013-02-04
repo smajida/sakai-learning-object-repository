@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.apachecommons.CommonsLog;
 
+import org.apache.commons.lang.StringUtils;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentHostingService;
@@ -211,11 +212,13 @@ public class ProjectLogic {
 	/**
 	 * Get a list of all resources in the current site.
 	 * 
-	 * Transroms from the Sakai ContentResource to an internal ContentItem
+	 * Transforms from the Sakai ContentResource to an internal ContentItem
+	 * 
+	 * @param filter optional filter string for post processing of the list
 	 * 
 	 * @return
 	 */
-	public List<ContentItem> getResources() {
+	public List<ContentItem> getResources(String filter) {
 		
 		List<ContentItem> items = new ArrayList<ContentItem>();
 		
@@ -223,18 +226,29 @@ public class ProjectLogic {
 		log.debug("currentSiteCollectionId: " + currentSiteCollectionId);
 		
 		List<ContentResource> resources = contentHostingService.getAllResources(currentSiteCollectionId);
+			
+		ContentResourceHelper helper = new ContentResourceHelper();
 		
 		for(ContentResource resource: resources) {
+			
+			//setup the helper for this resource item
+			helper.setResource(resource);
+			
+			//first check it matches any filter, if set, otherwise skip.
+			if(StringUtils.isNotBlank(filter)) {
+				if (!helper.resourceMatchesFilter(filter)) {
+					continue;
+				}
+			}
 			
 			ContentItem item = new ContentItem();
 			item.setSize(resource.getContentLength());
 			item.setUrl(resource.getUrl());
 			item.setMimeType(resource.getContentType());
-			item.setTitle(resource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
-
-			item.setAuthor(resource.getProperties().getProperty(ResourceProperties.PROP_CREATOR));
-			item.setModifiedDate(resource.getProperties().getProperty(ResourceProperties.PROP_MODIFIED_DATE));
-
+			item.setTitle(helper.getTitle());
+			item.setAuthor(helper.getCreator());
+			item.setModifiedDate(helper.getModifiedDate());
+			
 			System.out.println(item.toString());
 						
 			items.add(item);
@@ -257,5 +271,6 @@ public class ProjectLogic {
 			return uuid;
 		}
 	}
+	
 	
 }
