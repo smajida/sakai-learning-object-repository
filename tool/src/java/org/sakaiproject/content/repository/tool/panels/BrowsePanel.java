@@ -3,6 +3,7 @@ package org.sakaiproject.content.repository.tool.panels;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -33,6 +34,17 @@ public class BrowsePanel extends Panel{
 		
 		final List<ContentItem> items = logic.getResources(filter);
 		
+		//header
+		WebMarkupContainer header = new WebMarkupContainer("header") {
+			public boolean isVisible() {
+				if(!items.isEmpty()) {
+					return true;
+				}
+				return false;
+			}
+		};
+		add(header);
+		
 		//display results
 		PageableListView list = new PageableListView<ContentItem>("data", items, RepositoryApp.MAX_CONTENT_ITEMS_PER_PAGE) {			
 			protected void populateItem(final ListItem<ContentItem> item) {
@@ -46,6 +58,7 @@ public class BrowsePanel extends Panel{
 				item.add(new Label("size", ProjectUtils.formatSize(ci.getSize())));
 			
 			}
+			
 		};
 		add(list);
 		add(new PagingNavigator("pager", list) {
@@ -59,6 +72,17 @@ public class BrowsePanel extends Panel{
 				return false;
 			}
 		});
+		
+		//no items message
+		WebMarkupContainer noResults = new WebMarkupContainer("noResults") {
+			public boolean isVisible() {
+				if(items.isEmpty()) {
+					return true;
+				}
+				return false;
+			}
+		};
+		add(noResults);
 		
 	}
 	

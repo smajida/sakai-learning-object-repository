@@ -4,7 +4,7 @@
 <table cellspacing="0" class="listHier lines">
 	
 	<tbody>
-		<tr>
+		<tr wicket:id="header">
 			<th style="border:none;">&nbsp;</th>
 			<th style="border:none;"><wicket:message key="browse.title" /></th>
 			<th style="border:none;"><wicket:message key="browse.revision" /></th>
@@ -37,6 +37,8 @@
 		</tr>
 	</tbody>
 	<div wicket:id="pager" />
+	
+	<p wicket:id="noResults"><wicket:message key="no.items" /></p>
 	
 </table>
 
