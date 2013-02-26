@@ -61,4 +61,12 @@
 .action-panel .input {
 	padding-right: 10px;
 }
+
+/** feedback panel styles **/
+li.feedbackPanelERROR {
+	list-style-type: none;
+}
+.alertMessage {
+	padding:none !important;
+}
 }

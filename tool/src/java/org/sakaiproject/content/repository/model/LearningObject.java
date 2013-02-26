@@ -30,6 +30,11 @@ public class LearningObject implements Serializable {
 	private String mimetype;
 	private String filename;
 	
+	/**
+	 * File meta
+	 */
+	private String displayName;
+	
 	
 	
 	

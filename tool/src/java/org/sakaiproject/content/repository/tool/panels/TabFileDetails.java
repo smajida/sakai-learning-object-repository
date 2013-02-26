@@ -1,20 +1,19 @@
 package org.sakaiproject.content.repository.tool.panels;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.lang.Bytes;
 import org.sakaiproject.content.repository.logic.ProjectLogic;
 import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.tool.RepositoryApp;
-import org.sakaiproject.content.repository.tool.pages.ContentItemPage;
 
 /**
  * Panel for the file upload tab
@@ -54,6 +53,8 @@ public class TabFileDetails extends Panel {
 		
 		public UploadForm(String id) {
 			super(id);
+			
+			CompoundPropertyModel model = new CompoundPropertyModel(lo);
 						
 			setMaxSize(Bytes.megabytes(RepositoryApp.MAX_FILE_SIZE_MB));
 			setOutputMarkupId(true);
@@ -63,7 +64,7 @@ public class TabFileDetails extends Panel {
 			uploadField.setOutputMarkupId(true);
 			add(uploadField);
 			
-			add(new TextField("displayName"));
+			add(new TextField("displayName", new PropertyModel(lo, "displayName")));
 			
 			add(new Button("continue") {
 				@Override
