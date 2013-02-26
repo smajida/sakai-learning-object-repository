@@ -26,6 +26,10 @@
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-spring</artifactId>
     	</dependency>
+    	<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-extensions</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
@@ -80,6 +84,7 @@
 			<groupId>org.sakaiproject.search</groupId>
 			<artifactId>search-api</artifactId>
 		</dependency>
+		
 	</dependencies>
 	
 

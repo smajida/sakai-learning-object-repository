@@ -27,7 +27,6 @@ public class BrowsePanel extends Panel{
 
 	@SpringBean(name="org.sakaiproject.content.repository.logic.ProjectLogic")
 	private ProjectLogic logic;
-	private String filter;
 			
 	public BrowsePanel(String id, String filter) {
 		super(id);

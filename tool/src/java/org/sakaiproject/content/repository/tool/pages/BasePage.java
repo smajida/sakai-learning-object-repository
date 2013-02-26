@@ -49,14 +49,12 @@ public class BasePage extends WebPage implements IHeaderContributor {
 				setResponsePage(new BrowsePage());
 			}
 		};
-		//browseLink.add(new Label("firstLinkLabel",new ResourceModel("link.first")).setRenderBodyOnly(true));
-		//browseLink.add(new AttributeModifier("title", true, new ResourceModel("link.first.tooltip")));
 		add(browseLink);
 		
 		addLink = new Link<Void>("addLink") {
 			private static final long serialVersionUID = 1L;
 			public void onClick() {
-				setResponsePage(new AddPage());
+				setResponsePage(new ContentItemPage());
 			}
 		};
 		add(addLink);

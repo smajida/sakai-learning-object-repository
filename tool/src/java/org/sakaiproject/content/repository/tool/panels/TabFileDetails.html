@@ -1,0 +1,20 @@
+
+<wicket:panel>
+
+	<form wicket:id="form">
+	
+		<p><input type="file" wicket:id="file"/></p>
+		
+		<label wicket:for="displayName"><wicket:message key="label.lo.displayname" /></label> 
+		<input type="text" wicket:id="displayName" size="40" />
+	
+		<div class="action-panel">
+		<input type="submit" wicket:message="value:action.upload"/>
+		<input type="button" wicket:id="continue" wicket:message="value:action.continue"/>
+		</div>
+	
+	</form>
+	
+	
+		
+</wicket:panel>

@@ -1,6 +1,7 @@
 package org.sakaiproject.content.repository.logic;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,15 +12,19 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.apachecommons.CommonsLog;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
+import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.content.repository.model.ContentItem;
+import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.model.SearchItem;
-import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.event.api.EventTrackingService;
+import org.sakaiproject.event.api.NotificationService;
 import org.sakaiproject.search.api.InvalidSearchQueryException;
 import org.sakaiproject.search.api.SearchList;
 import org.sakaiproject.search.api.SearchResult;
@@ -226,7 +231,7 @@ public class ProjectLogic {
 		log.debug("currentSiteCollectionId: " + currentSiteCollectionId);
 		
 		List<ContentResource> resources = contentHostingService.getAllResources(currentSiteCollectionId);
-			
+				
 		ContentResourceHelper helper = new ContentResourceHelper();
 		
 		for(ContentResource resource: resources) {
@@ -270,6 +275,120 @@ public class ProjectLogic {
 		} catch (UserNotDefinedException e){
 			return uuid;
 		}
+	}
+	
+	/**
+	 * Get a learning object
+	 * @param id - id of the object in CHS
+	 * @return
+	 */
+	public LearningObject getLearningObject(String id) {
+		
+		//find a LO by its id
+		return new LearningObject();
+				
+	}
+	
+	/**
+	 * Add a new learning object to the repository. This should be called when all data is ready to be added.
+	 * 
+	 * @param lo
+	 * @return LearningObject with ID field populated
+	 */
+	public LearningObject addNewLearningObject(LearningObject lo) {
+				
+		ContentResourceEdit resource = null;
+		int status = 0;
+		
+		String currentSiteCollectionId = contentHostingService.getSiteCollection(getCurrentSiteId());
+		String baseName = FilenameUtils.getBaseName(lo.getFilename());
+		String extension = FilenameUtils.getExtension(lo.getFilename());
+		
+		SecurityAdvisor advisor = enableSecurityAdvisor();
+		
+		try {
+								
+				resource = contentHostingService.addResource(currentSiteCollectionId, baseName, extension, 100);
+				//resource.setContent(lo.getContents());
+				resource.setContentType(lo.getMimetype());
+				
+				
+				contentHostingService.commitResource(resource, NotificationService.NOTI_NONE);
+				
+				//populate ID of LO field with resource ID field
+				lo.setId(resource.getId());
+
+
+				/*
+				resource.set
+				
+				ResourceProperties props = resource.getPropertiesEdit();
+				props.addProperty(ResourceProperties.PROP_CONTENT_TYPE, mimeType);
+				props.addProperty(ResourceProperties.PROP_DISPLAY_NAME, fileName);
+				props.addProperty(ResourceProperties.PROP_CREATOR, userId);
+				resource.getPropertiesEdit().set(props);
+				contentHostingService.commitResource(resource, NotificationService.NOTI_NONE);
+				result = true;
+				*/
+			
+			//catch (IdUsedException e){
+			//	contentHostingService.cancelResource(resource);
+				//log.error("SakaiProxy.saveFile(): id= " + fullResourceId + " is in use : " + e.getClass() + " : " + e.getMessage());
+				//result = false;
+			//}
+			
+			
+		} catch (Exception e) {
+			
+			contentHostingService.cancelResource(resource);
+			log.error("addNewLearningObject: failed: " + e.getClass() + " : " + e.getMessage());
+			e.printStackTrace();
+			//result = false;
+		} finally {
+			disableSecurityAdvisor(advisor);
+		}
+		
+		//now populate the ID field of the LO with the
+		
+		return lo;
+		
+	}
+	
+	
+	
+	/**
+	 * Enable an advisor
+	 * @return
+	 */
+	private SecurityAdvisor enableSecurityAdvisor() {
+		SecurityAdvisor advisor = new SecurityAdvisor() {
+            public SecurityAdvice isAllowed(String userId, String function, String reference) {
+                return SecurityAdvice.ALLOWED;
+            }
+        };
+        securityService.pushAdvisor(advisor);
+        
+        return advisor;
+
+	}
+	
+	/**
+	 * Disable the advisor
+	 * @param advisor
+	 */
+	private void disableSecurityAdvisor(SecurityAdvisor advisor){
+		securityService.popAdvisor(advisor);
+	}
+	
+	/**
+	 * WRite a file upload out to disk and return the path to the file so that we can keep a reference to it, without keeping the whole file in memory
+	 * 
+	 * @param is
+	 * @return
+	 */
+	private String stashUploadedFile(InputStream is) {
+		
+		return "somepath";
 	}
 	
 	
