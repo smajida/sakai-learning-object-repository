@@ -12,6 +12,30 @@
 				<td><wicket:message key="label.lo.displayname" /></td>
 				<td><input type="text" wicket:id="displayName" size="40" /></td>
 			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.copyrightstatus" /></td>
+				<td><select wicket:id="copyrightStatus"></select></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.copyrightalert.1" /></td>
+				<td><input type="checkbox" wicket:id="copyrightAlert" /><span class="small"><wicket:message key="label.lo.copyrightalert.2" /></span></td>
+			</tr>
+			<tr>
+				<td class="right bold"><wicket:message key="label.lo.header.availability" /></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="top"><wicket:message key="label.lo.access.choose" /></td>
+				<td>
+					<div wicket:id="access">
+						<input type="radio" wicket:id="access1" /><wicket:message key="label.lo.access.siteonly" />
+						<br />
+						<input type="radio" wicket:id="access2" /><wicket:message key="label.lo.access.public" />
+					</div>
+				</td>
+			</tr>
+			
+			
 		</table>
 	
 		<div class="action-panel">

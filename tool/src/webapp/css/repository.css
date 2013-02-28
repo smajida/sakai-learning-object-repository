@@ -21,6 +21,20 @@
 	padding: 0 !important;
 }
 
+.small {
+	font-size: x-small;
+}
+
+.left {
+	text-align: left;
+}
+.top {
+	vertical-align: top;
+}
+.bold {
+	font-weight: bold;
+}
+
 /* tabs */
 .tab-panel .tab-row ul {
 	height: 25px;
@@ -68,5 +82,4 @@ li.feedbackPanelERROR {
 }
 .alertMessage {
 	padding:none !important;
-}
 }

@@ -25,6 +25,7 @@ public class LearningObject implements Serializable {
 	/**
 	 * File properties
 	 */
+	private String file; //form placeholder
 	private long size;
 	private String stashedFilePath;
 	private String mimetype;
@@ -34,9 +35,13 @@ public class LearningObject implements Serializable {
 	 * File meta
 	 */
 	private String displayName;
+	private int copyrightStatus;
+	private boolean copyrightAlert;
 	
-	
-	
+	/**
+	 * Access
+	 */
+	private boolean access;
 	
 }
 
