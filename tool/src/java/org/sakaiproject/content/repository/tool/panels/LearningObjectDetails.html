@@ -1,0 +1,66 @@
+
+<wicket:panel>
+
+	<form wicket:id="form">
+	
+		<table>
+			
+			<tr>
+				<td><wicket:message key="label.lo.description" /></td>
+				<td><textarea wicket:id="description" rows="6" cols="60"></textarea></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.resourcetype" /></td>
+				<td><select wicket:id="resourceType"></select></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.usage.environment" /></td>
+				<td><select wicket:id="environment"></select></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.intendedaudience" /></td>
+				<td><select wicket:id="intendedAudience"></select></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.difficulty" /></td>
+				<td><select wicket:id="difficulty"></select></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.engagement" /></td>
+				<td><select wicket:id="engagement"></select></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.interactivity" /></td>
+				<td><select wicket:id="interactivity"></select></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.audienceeducation" /></td>
+				<td><select wicket:id="audienceEducation"></select></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.learningtime" /></td>
+				<td><select wicket:id="learningTime"></select></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.assumedknowledge" /></td>
+				<td><textarea wicket:id="assumedKnowledge" rows="6" cols="60"></textarea></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.keywords" /></td>
+				<td><textarea wicket:id="keywords" rows="6" cols="60"></textarea></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.outcomes" /></td>
+				<td><textarea wicket:id="outcomes" rows="6" cols="60"></textarea></td>
+			</tr>
+			
+		</table>
+	
+		<div class="action-panel">
+			<input type="button" wicket:id="back" wicket:message="value:action.back"/>
+			<input type="submit" wicket:message="value:action.continue"/>
+		</div>
+			
+	</form>
+		
+</wicket:panel>

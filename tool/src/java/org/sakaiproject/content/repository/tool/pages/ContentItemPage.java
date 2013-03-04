@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.ResourceModel;
 import org.sakaiproject.content.repository.model.FormMode;
 import org.sakaiproject.content.repository.model.LearningObject;
+import org.sakaiproject.content.repository.tool.panels.LearningObjectDetails;
 import org.sakaiproject.content.repository.tool.panels.TabFileDetails;
 
 /**
@@ -62,7 +63,7 @@ public class ContentItemPage extends BasePage {
 		if(mode == FormMode.ADD) {
 			tabs.add(new AbstractTab(new ResourceModel("tab.title.file")) {
 				public Panel getPanel(String panelId) {
-					return new TabFileDetails(panelId, lo);
+					return new TabFileDetails(panelId, lo, mode);
 				}
 			});
 		}
@@ -70,7 +71,7 @@ public class ContentItemPage extends BasePage {
 		
 		tabs.add(new AbstractTab(new ResourceModel("tab.title.lo")) {
 			public Panel getPanel(String panelId) {
-				return new EmptyPanel(panelId);
+				return new LearningObjectDetails(panelId, lo, mode);
 			}
 		});
 		

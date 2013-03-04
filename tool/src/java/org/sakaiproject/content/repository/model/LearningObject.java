@@ -1,6 +1,5 @@
 package org.sakaiproject.content.repository.model;
 
-import java.io.InputStream;
 import java.io.Serializable;
 
 import lombok.Data;
@@ -42,6 +41,27 @@ public class LearningObject implements Serializable {
 	 * Access
 	 */
 	private boolean access;
+	private String dateFrom;
+	private String dateTo;
+	private int fileStatus;
+	private String publisher;
+	
+	/**
+	 * LO details
+	 */
+	private String description;
+	private String resourceType;
+	private String environment;
+	private String intendedAudience;
+	private String audienceEducation;
+	private String engagement;
+	private String interactivity;
+	private String difficulty;
+	private String assumedKnowledge;
+	private String learningTime;
+	private String keywords;
+	private String outcomes;
+	
 	
 }
 

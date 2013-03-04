@@ -35,6 +35,12 @@
 	font-weight: bold;
 }
 
+.section-header {
+	font-weight: bold;
+	font-size: larger;
+	margin-top: 10px;
+}
+
 /* tabs */
 .tab-panel .tab-row ul {
 	height: 25px;
