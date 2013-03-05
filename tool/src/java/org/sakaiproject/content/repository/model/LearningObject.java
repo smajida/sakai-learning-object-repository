@@ -2,6 +2,9 @@ package org.sakaiproject.content.repository.model;
 
 import java.io.Serializable;
 
+import org.apache.wicket.markup.html.form.TextField;
+import org.sakaiproject.content.repository.tool.components.HashMapDropdown;
+
 import lombok.Data;
 import lombok.ToString;
 
@@ -61,6 +64,17 @@ public class LearningObject implements Serializable {
 	private String learningTime;
 	private String keywords;
 	private String outcomes;
+	
+	/**
+	 * Technical requirements
+	 */
+	private String techReqType;
+	private String techReqName;
+	private String techReqMinVersion;
+	private String techReqMaxVersion;
+	private String techReqAndOr;
+	private String techReqInstallRemarks;
+	private String techReqOther;
 	
 	
 }

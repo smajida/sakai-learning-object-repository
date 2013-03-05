@@ -12,8 +12,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.ResourceModel;
 import org.sakaiproject.content.repository.model.FormMode;
 import org.sakaiproject.content.repository.model.LearningObject;
-import org.sakaiproject.content.repository.tool.panels.LearningObjectDetails;
 import org.sakaiproject.content.repository.tool.panels.TabFileDetails;
+import org.sakaiproject.content.repository.tool.panels.TabLearningObjectDetails;
+import org.sakaiproject.content.repository.tool.panels.TabTechReqs;
 
 /**
  * ContentItemPage page, sets up the tabs, able to switch modes based on what we want it to do
@@ -24,15 +25,14 @@ import org.sakaiproject.content.repository.tool.panels.TabFileDetails;
 public class ContentItemPage extends BasePage {
 
 	private FormMode mode;
+	private int selectedTab = 0; //first tab, default
 	
 	/**
 	 * Default constructor if we launch the page normally. We will be adding a new content item
 	 */
 	public ContentItemPage() {
 		mode = FormMode.ADD;
-		
 		LearningObject lo = new LearningObject();
-
 		doRender(lo);
 	}
 	
@@ -49,6 +49,20 @@ public class ContentItemPage extends BasePage {
 		doRender(lo);
 	}
 	
+	/**
+	 * Consutrctor used for switching between tabs
+	 * @param lo			Learning Object that is already loaded/in progress.
+	 * @param mode			FormMode
+	 * @param selectedTab	int for what tab we want
+	 */
+	public ContentItemPage(LearningObject lo, FormMode mode, int selectedTab) {
+		this.mode=mode;
+		this.selectedTab=selectedTab;
+		
+		doRender(lo);
+	}
+	
+	//TODO need constructor that takes the selectedTab int
 	
 	
 	private void doRender(final LearningObject lo) {
@@ -71,26 +85,30 @@ public class ContentItemPage extends BasePage {
 		
 		tabs.add(new AbstractTab(new ResourceModel("tab.title.lo")) {
 			public Panel getPanel(String panelId) {
-				return new LearningObjectDetails(panelId, lo, mode);
+				return new TabLearningObjectDetails(panelId, lo, mode);
 			}
 		});
 		
 		tabs.add(new AbstractTab(new ResourceModel("tab.title.tech")) {
 			public Panel getPanel(String panelId) {
-				return new EmptyPanel(panelId);
+				return new TabTechReqs(panelId, lo, mode);
 			}
 		});
 		
-		tabs.add(new AbstractTab(new ResourceModel("tab.title.history")) {
-			public Panel getPanel(String panelId) {
-				return new EmptyPanel(panelId);
-			}
-		});
+		
+		//only show if editing or viewing
+		if(mode == FormMode.EDIT) {
+			tabs.add(new AbstractTab(new ResourceModel("tab.title.history")) {
+				public Panel getPanel(String panelId) {
+					return new EmptyPanel(panelId);
+				}
+			});
+		}
 		
  
 
 		TabbedPanel tabbedPanel = new TabbedPanel("tabs", tabs);
-		//tabbedPanel.setSelectedTab(selectedTab);
+		tabbedPanel.setSelectedTab(selectedTab);
 		
 		
 		add(tabbedPanel);

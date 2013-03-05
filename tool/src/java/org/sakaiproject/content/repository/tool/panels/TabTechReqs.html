@@ -1,0 +1,45 @@
+
+<wicket:panel>
+
+	<form wicket:id="form">
+	
+		<table class="content-form">
+			<tr>
+				<td><wicket:message key="label.lo.techreq.type" /></td>
+				<td><select wicket:id="techReqType"></select></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.techreq.name" /></td>
+				<td><input type="text" wicket:id="techReqName" /></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.techreq.min" /></td>
+				<td><input type="text" wicket:id="techReqMinVersion" /></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.techreq.max" /></td>
+				<td><input type="text" wicket:id="techReqMaxVersion" /></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.techreq.andor" /></td>
+				<td><select wicket:id="techReqAndOr"></select></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.techreq.install" /></td>
+				<td><input type="text" wicket:id="techReqInstallRemarks" /></td>
+			</tr>
+			<tr>
+				<td><wicket:message key="label.lo.techreq.other" /></td>
+				<td><input type="text" wicket:id="techReqOther" /></td>
+			</tr>
+			
+		</table>
+	
+		<div class="action-panel">
+			<input type="button" wicket:id="back" wicket:message="value:action.back"/>
+			<input type="submit" wicket:message="value:action.finish"/>
+		</div>
+			
+	</form>
+		
+</wicket:panel>

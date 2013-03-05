@@ -24,11 +24,13 @@ import org.sakaiproject.content.repository.model.FormMode;
 import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.tool.RepositoryApp;
 import org.sakaiproject.content.repository.tool.components.HashMapChoiceRenderer;
+import org.sakaiproject.content.repository.tool.components.HashMapDropdown;
+import org.sakaiproject.content.repository.tool.pages.ContentItemPage;
 
 /**
  * Panel for the file upload tab
  * 
- * @author Steve Swisnburg (steve.swinsburg@gmail.com)
+ * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
  */
 public class TabFileDetails extends Panel {
@@ -37,8 +39,9 @@ public class TabFileDetails extends Panel {
 	private ProjectLogic logic;
 	
 	private boolean fileUploaded;
-	
 	private FormMode mode;
+	
+	private final int NEXT_TAB=1;
 
 	
 	
@@ -79,7 +82,7 @@ public class TabFileDetails extends Panel {
 			
 			add(new TextField("displayName"));
 			
-			add(new CopyrightStatusDropdown("copyrightStatus"));
+			add(new HashMapDropdown("copyrightStatus", getCopyrightOptions()));
 			
 			add(new CheckBox("copyrightAlert"));
 			
@@ -93,7 +96,7 @@ public class TabFileDetails extends Panel {
 			add(new TextField("dateFrom"));
 			add(new TextField("dateTo"));
 			
-			add(new FileStatusDropdown("fileStatus"));
+			add(new HashMapDropdown("fileStatus", getFileStatusOptions()));
 
 			
 			add(new TextField("publisher"));
@@ -128,58 +131,28 @@ public class TabFileDetails extends Panel {
 			
 			LearningObject lo = (LearningObject) this.getDefaultModelObject();
 			System.out.println(lo.toString());
+			
+			setResponsePage(new ContentItemPage(lo, mode, NEXT_TAB));
 						
 		}
 		
 		
 	}
 	
-	private class CopyrightStatusDropdown extends DropDownChoice {
-
-		LinkedHashMap<Integer,String> options;
-		
-		public CopyrightStatusDropdown(String id) {
-			super(id);
-			
-			options = new LinkedHashMap<Integer, String>();
-			options.put(990, new ResourceModel("options.copyright.1").getObject().toString());
-			options.put(991, new ResourceModel("options.copyright.2").getObject().toString());
-			
-			//model that wraps our options
-			IModel optionsModel = new Model() {
-				public ArrayList<Integer> getObject() {
-					 return new ArrayList(options.keySet());
-				} 
-			};
-			
-			setChoices(optionsModel);
-			setChoiceRenderer(new HashMapChoiceRenderer(options));
-		}
-
+	
+	private LinkedHashMap<Integer,String> getCopyrightOptions() {
+		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
+		options.put(990, new ResourceModel("options.copyright.1").getObject().toString());
+		options.put(991, new ResourceModel("options.copyright.2").getObject().toString());
+		return options;
 	}
 	
-	private class FileStatusDropdown extends DropDownChoice {
-
-		LinkedHashMap<Integer,String> options;
-		
-		public FileStatusDropdown(String id) {
-			super(id);
-			
-			options = new LinkedHashMap<Integer, String>();
-			options.put(990, new ResourceModel("options.filestatus.1").getObject().toString());
-			options.put(991, new ResourceModel("options.filestatus.2").getObject().toString());
-			
-			//model that wraps our options
-			IModel optionsModel = new Model() {
-				public ArrayList<Integer> getObject() {
-					 return new ArrayList(options.keySet());
-				} 
-			};
-			
-			setChoices(optionsModel);
-			setChoiceRenderer(new HashMapChoiceRenderer(options));
-		}
-
+	
+	private LinkedHashMap<Integer,String> getFileStatusOptions() {
+		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
+		options.put(990, new ResourceModel("options.filestatus.1").getObject().toString());
+		options.put(991, new ResourceModel("options.filestatus.2").getObject().toString());
+		return options;
 	}
 
 

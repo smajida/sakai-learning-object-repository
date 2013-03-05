@@ -35,6 +35,15 @@
 	font-weight: bold;
 }
 
+table.content-form {
+    border-collapse: collapse;
+}
+
+table.content-form tr td {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
 .section-header {
 	font-weight: bold;
 	font-size: larger;

@@ -27,31 +27,30 @@ import org.sakaiproject.content.repository.model.FormMode;
 import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.tool.RepositoryApp;
 import org.sakaiproject.content.repository.tool.components.HashMapChoiceRenderer;
+import org.sakaiproject.content.repository.tool.components.HashMapDropdown;
+import org.sakaiproject.content.repository.tool.pages.ContentItemPage;
 
 /**
- * Panel for the learning object details tab
+ * Panel for the technical requirements tab
  * 
- * @author Steve Swisnburg (steve.swinsburg@gmail.com)
+ * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
  */
-public class LearningObjectDetails extends Panel {
+public class TabTechReqs extends Panel {
 
 	@SpringBean(name="org.sakaiproject.content.repository.logic.ProjectLogic")
 	private ProjectLogic logic;
 	
 	private FormMode mode;
+	private final int BACK_TAB=0;
 		
 	
-	public LearningObjectDetails(String id, LearningObject lo, FormMode mode) {
+	public TabTechReqs(String id, LearningObject lo, FormMode mode) {
 		super(id);
 		this.mode=mode;
 		
 		//add form		
 		add(new DetailsForm("form", new CompoundPropertyModel<LearningObject>(lo)));
-		
-		
-		
-		
 		
 	}
 
@@ -68,23 +67,20 @@ public class LearningObjectDetails extends Panel {
 			//form fields will automatically math up with the underlying model if their id is the same as the attribute
 			//if not, set new PropertyModel(lom, "someOtherName")
 			
-			add(new TextArea("description"));
-			add(new CopyrightStatusDropdown("resourceType"));
-			add(new CopyrightStatusDropdown("environment"));
-			add(new CopyrightStatusDropdown("intendedAudience"));
-			add(new CopyrightStatusDropdown("audienceEducation"));
-			add(new CopyrightStatusDropdown("engagement"));
-			add(new CopyrightStatusDropdown("interactivity"));
-			add(new CopyrightStatusDropdown("difficulty"));
-			add(new CopyrightStatusDropdown("learningTime"));
-			add(new TextArea("assumedKnowledge"));
-			add(new TextArea("keywords"));
-			add(new TextArea("outcomes"));
-
+			add(new HashMapDropdown("techReqType", getTechReqOptions()));
+			add(new TextField("techReqName"));
+			add(new TextField("techReqMinVersion"));
+			add(new TextField("techReqMaxVersion"));
+			add(new HashMapDropdown("techReqAndOr", getTechAndOrOptions()));
+			add(new TextField("techReqInstallRemarks"));
+			add(new TextField("techReqOther"));			
+			
 			add(new Button("back") {
 				@Override
 				public void onSubmit() {
-					
+					LearningObject lo = (LearningObject) this.getDefaultModelObject();
+					System.out.println(lo.toString());
+					setResponsePage(new ContentItemPage(lo, mode, BACK_TAB));
 				}
 			});
 			
@@ -93,63 +89,30 @@ public class LearningObjectDetails extends Panel {
 		}
 		
 		protected void onSubmit() {
-			
-			
 			LearningObject lo = (LearningObject) this.getDefaultModelObject();
 			System.out.println(lo.toString());
-						
+			
 		}
 		
 		
 	}
 	
-	private class CopyrightStatusDropdown extends DropDownChoice {
+	
 
-		LinkedHashMap<Integer,String> options;
-		
-		public CopyrightStatusDropdown(String id) {
-			super(id);
-			
-			options = new LinkedHashMap<Integer, String>();
-			options.put(990, new ResourceModel("options.copyright.1").getObject().toString());
-			options.put(991, new ResourceModel("options.copyright.2").getObject().toString());
-			
-			//model that wraps our options
-			IModel optionsModel = new Model() {
-				public ArrayList<Integer> getObject() {
-					 return new ArrayList(options.keySet());
-				} 
-			};
-			
-			setChoices(optionsModel);
-			setChoiceRenderer(new HashMapChoiceRenderer(options));
-		}
-
+	private LinkedHashMap<Integer,String> getTechReqOptions() {
+		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
+		options.put(990, new ResourceModel("options.techreq.1").getObject().toString());
+		options.put(991, new ResourceModel("options.techreq.2").getObject().toString());
+		return options;
 	}
 	
-	private class FileStatusDropdown extends DropDownChoice {
-
-		LinkedHashMap<Integer,String> options;
-		
-		public FileStatusDropdown(String id) {
-			super(id);
-			
-			options = new LinkedHashMap<Integer, String>();
-			options.put(990, new ResourceModel("options.filestatus.1").getObject().toString());
-			options.put(991, new ResourceModel("options.filestatus.2").getObject().toString());
-			
-			//model that wraps our options
-			IModel optionsModel = new Model() {
-				public ArrayList<Integer> getObject() {
-					 return new ArrayList(options.keySet());
-				} 
-			};
-			
-			setChoices(optionsModel);
-			setChoiceRenderer(new HashMapChoiceRenderer(options));
-		}
-
+	private LinkedHashMap<Integer,String> getTechAndOrOptions() {
+		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
+		options.put(990, new ResourceModel("options.techandor.1").getObject().toString());
+		options.put(991, new ResourceModel("options.techandor.2").getObject().toString());
+		return options;
 	}
-
+	
+	
 
 }

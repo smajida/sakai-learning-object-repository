@@ -100,6 +100,7 @@ public class BasePage extends WebPage implements IHeaderContributor {
 		if(!f.hasFeedbackMessage()) {
 			f.add(new SimpleAttributeModifier("class", ""));
 		}
+		f.setVisible(false);
 	}
 	
 	
