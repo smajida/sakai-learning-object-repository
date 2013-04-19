@@ -20,15 +20,12 @@ public class LearningObject implements Serializable {
 
 	private String id;
 	
-	private int status = 0; //status of the resource in the repository. 0=doesnt exist, 1=exists and ok, 2=errors
-	private String statusMessage; //message to accompany status
-	
 	/**
 	 * File properties
 	 */
 	private String file; //form placeholder
 	private long size;
-	private String stashedFilePath;
+	private String stashedFilePath; //only used for initial upload
 	private String mimetype;
 	private String filename;
 	
@@ -63,6 +60,7 @@ public class LearningObject implements Serializable {
 	private String learningTime;
 	private String keywords;
 	private String outcomes;
+	private int version;
 	
 	/**
 	 * Technical requirements

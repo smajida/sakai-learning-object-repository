@@ -3,6 +3,7 @@ package org.sakaiproject.content.repository.tool.panels;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -114,22 +115,21 @@ public class TabFileDetails extends Panel {
 				return;
 			}
 			
-			//TODO set the data into the model so it goes into hte object at the end
-			// set the metadata into the learning object
-			//lo.setFilename(upload.getClientFileName());
-			//lo.setSize(upload.getSize());
-			//lo.setMimetype(upload.getContentType());
+			LearningObject lo = (LearningObject) this.getDefaultModelObject();
 			
-			//add the file
-			//logic.addNewLearningObject(lo);
+			// set the file data into the learning object
+			lo.setFilename(upload.getClientFileName());
+			lo.setSize(upload.getSize());
+			lo.setMimetype(upload.getContentType());
 			
 			//stash the file so we can deal with it later.
-			//do this directly from the uploaded file inputstream
-			//TODO
+			String stashedFilePath = logic.stashFile(upload.getBytes());
+			if(StringUtils.isBlank(stashedFilePath)) {
+				error(new StringResourceModel("error.couldnt.stash.file", this, null).getString());
+				return;
+			}
+			lo.setStashedFilePath(stashedFilePath);
 			
-			fileUploaded = true;
-			
-			LearningObject lo = (LearningObject) this.getDefaultModelObject();
 			System.out.println(lo.toString());
 			
 			setResponsePage(new ContentItemPage(lo, mode, NEXT_TAB));

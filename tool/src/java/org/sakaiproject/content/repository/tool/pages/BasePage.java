@@ -1,5 +1,7 @@
 package org.sakaiproject.content.repository.tool.pages;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -128,16 +130,9 @@ public class BasePage extends WebPage implements IHeaderContributor {
 	 */
 	public void renderHead(IHeaderResponse response) {
 		
-		
-		//get Sakai skin
-		String skinRepo = logic.getSkinRepoProperty();
-		String toolCSS = logic.getToolSkinCSS(skinRepo);
-		String toolBaseCSS = skinRepo + "/tool_base.css";
-		
-		//Sakai additions
-		response.renderJavascriptReference("/library/js/headscripts.js");
-		response.renderCSSReference(toolBaseCSS);
-		response.renderCSSReference(toolCSS);
+		//get the Sakai skin header fragment from the request attribute
+		HttpServletRequest request = getWebRequestCycle().getWebRequest().getHttpServletRequest();
+		response.renderString((String)request.getAttribute("sakai.html.head"));
 		response.renderOnLoadJavascript("setMainFrameHeight( window.name )");
 		
 		//Tool additions (at end so we can override if required)

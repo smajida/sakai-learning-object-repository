@@ -51,6 +51,12 @@ public class TabTechReqs extends Panel {
             {
             	//LearningObject lo = (LearningObject) this.getDefaultModelObject();
 				System.out.println(lo.toString());
+				boolean result = logic.addNewLearningObject(lo);
+				if(result) {
+					info("DONE!");
+				} else {
+					error("failed, booooo");
+				}
             }
         };
         add(form);

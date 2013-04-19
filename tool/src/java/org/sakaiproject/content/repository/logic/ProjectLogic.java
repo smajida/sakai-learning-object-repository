@@ -7,13 +7,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
+import java.util.UUID;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.apachecommons.CommonsLog;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.wicket.util.file.File;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.component.api.ServerConfigurationService;
@@ -23,8 +28,10 @@ import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.content.repository.model.ContentItem;
 import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.model.SearchItem;
+import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.event.api.NotificationService;
+import org.sakaiproject.exception.IdUsedException;
 import org.sakaiproject.search.api.InvalidSearchQueryException;
 import org.sakaiproject.search.api.SearchList;
 import org.sakaiproject.search.api.SearchResult;
@@ -124,29 +131,6 @@ public class ProjectLogic {
 		eventTrackingService.post(eventTrackingService.newEvent(event,reference,modify));
 	}
 	
-	/**
-	 * Wrapper for ServerConfigurationService.getString("skin.repo")
-	 * @return
-	 */
-	public String getSkinRepoProperty(){
-		return serverConfigurationService.getString("skin.repo");
-	}
-	
-	/**
-	 * Gets the tool skin CSS first by checking the tool, otherwise by using the default property.
-	 * @param	the location of the skin repo
-	 * @return
-	 */
-	public String getToolSkinCSS(String skinRepo){
-		
-		String skin = siteService.findTool(sessionManager.getCurrentToolSession().getPlacementId()).getSkin();			
-		
-		if(skin == null) {
-			skin = serverConfigurationService.getString("skin.default");
-		}
-		
-		return skinRepo + "/" + skin + "/tool.css";
-	}
 	
 	/**
 	 * Get a configuration parameter as a boolean
@@ -254,7 +238,7 @@ public class ProjectLogic {
 			item.setAuthor(helper.getCreator());
 			item.setModifiedDate(helper.getModifiedDate());
 			
-			System.out.println(item.toString());
+			//System.out.println(item.toString());
 						
 			items.add(item);
 		}
@@ -295,66 +279,98 @@ public class ProjectLogic {
 	 * @param lo
 	 * @return LearningObject with ID field populated
 	 */
-	public LearningObject addNewLearningObject(LearningObject lo) {
+	public boolean addNewLearningObject(LearningObject lo) {
 				
 		ContentResourceEdit resource = null;
-		int status = 0;
 		
 		String currentSiteCollectionId = contentHostingService.getSiteCollection(getCurrentSiteId());
 		String baseName = FilenameUtils.getBaseName(lo.getFilename());
 		String extension = FilenameUtils.getExtension(lo.getFilename());
 		
+		byte[] bytes = retrieveStashedFile(lo.getStashedFilePath());
+		if(bytes == null) {
+			log.error("Stashed file could not be retrieved, aborting");
+			return false;
+		}
+		
 		SecurityAdvisor advisor = enableSecurityAdvisor();
 		
 		try {
-								
-				resource = contentHostingService.addResource(currentSiteCollectionId, baseName, extension, 100);
-				//resource.setContent(lo.getContents());
-				resource.setContentType(lo.getMimetype());
 				
-				
-				contentHostingService.commitResource(resource, NotificationService.NOTI_NONE);
-				
-				//populate ID of LO field with resource ID field
-				lo.setId(resource.getId());
+			resource = contentHostingService.addResource(currentSiteCollectionId, baseName, extension, 100);
+			resource.setContent(bytes);
+			resource.setContentType(lo.getMimetype());
+			
+			//add standard properties
+			ResourceProperties props = resource.getPropertiesEdit();
+			props.addProperty(ResourceProperties.PROP_CONTENT_TYPE, lo.getMimetype());
+			props.addProperty(ResourceProperties.PROP_DISPLAY_NAME, lo.getFilename());
+			props.addProperty(ResourceProperties.PROP_CREATOR, getCurrentUserDisplayName());
+						
+			//add LO props
+			props.addAll(convertProperties(lo));
+			
+			System.out.println(props.toString());
 
+			
+			//resource.getPropertiesEdit().set(props);
+			
+			contentHostingService.commitResource(resource, NotificationService.NOTI_NONE);
+			return true;
+			//populate ID of LO field with resource ID field
+			//lo.setId(resource.getId());
 
-				/*
-				resource.set
-				
-				ResourceProperties props = resource.getPropertiesEdit();
-				props.addProperty(ResourceProperties.PROP_CONTENT_TYPE, mimeType);
-				props.addProperty(ResourceProperties.PROP_DISPLAY_NAME, fileName);
-				props.addProperty(ResourceProperties.PROP_CREATOR, userId);
-				resource.getPropertiesEdit().set(props);
-				contentHostingService.commitResource(resource, NotificationService.NOTI_NONE);
-				result = true;
-				*/
-			
-			//catch (IdUsedException e){
-			//	contentHostingService.cancelResource(resource);
-				//log.error("SakaiProxy.saveFile(): id= " + fullResourceId + " is in use : " + e.getClass() + " : " + e.getMessage());
-				//result = false;
-			//}
-			
-			
 		} catch (Exception e) {
 			
 			contentHostingService.cancelResource(resource);
 			log.error("addNewLearningObject: failed: " + e.getClass() + " : " + e.getMessage());
 			e.printStackTrace();
-			//result = false;
 		} finally {
 			disableSecurityAdvisor(advisor);
 		}
 		
-		//now populate the ID field of the LO with the
-		
-		return lo;
-		
+		return false;
 	}
 	
+	/**
+	 * Stashes a file in a temporary area on the filesystem, returns the filePath.
+	 * 
+	 * 
+	 * @param bytes - byte[] for file
+	 * @return path to file
+	 */
+	public String stashFile(byte[] bytes) {
+		String outputPath = FileUtils.getTempDirectory().getAbsolutePath() + File.separatorChar + UUID.randomUUID().toString();
+		File f = new File(outputPath);
+		f.deleteOnExit();
+		try {
+			FileUtils.writeByteArrayToFile(f, bytes);
+			log.debug("Stashed file: " + f);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return outputPath;
+	}
 	
+	/**
+	 * Complementary function for retrieving a stashed file from the filesystem
+	 * @param stashedPath path to file
+	 * @return byte[] for the file, null if it doesnt exist
+	 */
+	private byte[] retrieveStashedFile(String stashedPath) {
+		File f = new File(stashedPath);
+		if(!f.exists()) {
+			return null;
+		}
+		try {
+			log.info("Retrieving stashed file: " + stashedPath);
+			return FileUtils.readFileToByteArray(f);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	/**
 	 * Enable an advisor
@@ -381,14 +397,16 @@ public class ProjectLogic {
 	}
 	
 	/**
-	 * WRite a file upload out to disk and return the path to the file so that we can keep a reference to it, without keeping the whole file in memory
-	 * 
-	 * @param is
+	 * Gets all properties in the learning object and converts them into a Properties set
+	 * @param lo
 	 * @return
 	 */
-	private String stashUploadedFile(InputStream is) {
+	private Properties convertProperties(LearningObject lo) {
+		Properties p = new Properties();
 		
-		return "somepath";
+		p.setProperty("VERSION", Integer.toString(lo.getVersion()));
+		
+		return p;
 	}
 	
 	
