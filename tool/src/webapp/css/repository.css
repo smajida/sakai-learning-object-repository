@@ -28,6 +28,9 @@
 .left {
 	text-align: left;
 }
+.right {
+	text-align: right;
+}
 .top {
 	vertical-align: top;
 }
@@ -37,6 +40,11 @@
 
 table.content-form {
     border-collapse: collapse;
+}
+
+table.multiple {
+    margin-bottom: 20px;
+    border-bottom: 1px solid red;
 }
 
 table.content-form tr td {
@@ -87,8 +95,15 @@ table.content-form tr td {
 }
 
 /** action panel **/
-.action-panel .input {
+.action-panel, .sub-action-panel {
+	margin-top: 10px;
+}
+.action-panel .input, .sub-action-panel .input {
 	padding-right: 10px;
+}
+
+.sub-action-panel .input {
+	font-size: small;
 }
 
 /** feedback panel styles **/

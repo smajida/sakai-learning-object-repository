@@ -2,8 +2,14 @@
 <wicket:panel>
 
 	<form wicket:id="form">
-	
-		<table class="content-form">
+		
+		<p><wicket:message key="instruction.lo.techreqs.1" /></p>
+		
+		<table class="content-form multiple" wicket:id="techReqs">
+			<tr>
+				<td>&nbsp;</td>
+				<td class="right"><input wicket:id="remove" type="submit" wicket:message="value:action.remove"/></td>
+			</tr>
 			<tr>
 				<td><wicket:message key="label.lo.techreq.type" /></td>
 				<td><select wicket:id="techReqType"></select></td>
@@ -32,11 +38,15 @@
 				<td><wicket:message key="label.lo.techreq.other" /></td>
 				<td><input type="text" wicket:id="techReqOther" /></td>
 			</tr>
-			
 		</table>
+				
+		
+		<div class="sub-action-panel">
+			<input type="submit" wicket:id="add" wicket:message="value:action.add.techreq"/>
+		</div>
 	
 		<div class="action-panel">
-			<input type="button" wicket:id="back" wicket:message="value:action.back"/>
+			<input type="submit" wicket:id="back" wicket:message="value:action.back"/>
 			<input type="submit" wicket:message="value:action.finish"/>
 		</div>
 			

@@ -1,37 +1,27 @@
 package org.sakaiproject.content.repository.tool.panels;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.Radio;
-import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.form.upload.FileUpload;
-import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.lang.Bytes;
 import org.sakaiproject.content.repository.logic.ProjectLogic;
 import org.sakaiproject.content.repository.model.FormMode;
 import org.sakaiproject.content.repository.model.LearningObject;
-import org.sakaiproject.content.repository.tool.RepositoryApp;
-import org.sakaiproject.content.repository.tool.components.HashMapChoiceRenderer;
+import org.sakaiproject.content.repository.model.TechnicalRequirement;
 import org.sakaiproject.content.repository.tool.components.HashMapDropdown;
+import org.sakaiproject.content.repository.tool.components.ListEditor;
+import org.sakaiproject.content.repository.tool.components.ListItem;
+import org.sakaiproject.content.repository.tool.components.RemoveButton;
 import org.sakaiproject.content.repository.tool.pages.ContentItemPage;
 
 /**
- * Panel for the technical requirements tab
+ * Panel for the technical requirements tab. Allows multiples
  * 
  * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
@@ -41,16 +31,67 @@ public class TabTechReqs extends Panel {
 	@SpringBean(name="org.sakaiproject.content.repository.logic.ProjectLogic")
 	private ProjectLogic logic;
 	
-	private FormMode mode;
-	private final int BACK_TAB=0;
-		
+	private final FormMode mode;
+	private final int BACK_TAB=1;
+	private final ListEditor<TechnicalRequirement> editor;
+	private LearningObject lo;
 	
-	public TabTechReqs(String id, LearningObject lo, FormMode mode) {
+	public TabTechReqs(String id, LearningObject data, FormMode formMode) {
 		super(id);
-		this.mode=mode;
+		this.mode=formMode;
+		this.lo=data;
 		
 		//add form		
-		add(new DetailsForm("form", new CompoundPropertyModel<LearningObject>(lo)));
+		//add(new DetailsForm("form", new CompoundPropertyModel<LearningObject>(lo)));
+		
+		Form form = new Form("form")
+        {
+            @Override
+            protected void onSubmit()
+            {
+            	//LearningObject lo = (LearningObject) this.getDefaultModelObject();
+				System.out.println(lo.toString());
+            }
+        };
+        add(form);
+	        
+        editor = new ListEditor<TechnicalRequirement>("techReqs", new PropertyModel(this, "lo.techReqs"))
+        {
+            @Override
+            protected void onPopulateItem(ListItem<TechnicalRequirement> item)
+            {
+                item.setModel(new CompoundPropertyModel(item.getModel()));
+                item.add(new HashMapDropdown("techReqType", getTechReqOptions()));
+                item.add(new TextField("techReqName"));
+                item.add(new TextField("techReqMinVersion"));
+    			item.add(new TextField("techReqMaxVersion"));
+    			item.add(new HashMapDropdown("techReqAndOr", getTechAndOrOptions()));
+    			item.add(new TextField("techReqInstallRemarks"));
+    			item.add(new TextField("techReqOther"));		
+
+    			item.add(new RemoveButton("remove"));
+            }
+        };
+
+        //add button
+        form.add(new Button("add")
+        {
+            @Override
+            public void onSubmit()
+            {
+                editor.addItem(new TechnicalRequirement());
+            }
+        }.setDefaultFormProcessing(false));
+       
+        //back button
+        form.add(new Button("back") {
+			@Override
+			public void onSubmit() {
+				setResponsePage(new ContentItemPage(lo, mode, BACK_TAB));
+			}
+		}.setDefaultFormProcessing(false));
+        
+        form.add(editor);
 		
 	}
 
@@ -58,6 +99,7 @@ public class TabTechReqs extends Panel {
 	/**
 	 * DetailsForm form
 	 */
+	/*
 	private class DetailsForm extends Form<Void> {
 
 		
@@ -96,7 +138,7 @@ public class TabTechReqs extends Panel {
 		
 		
 	}
-	
+	*/
 	
 
 	private LinkedHashMap<Integer,String> getTechReqOptions() {
