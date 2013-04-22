@@ -71,4 +71,6 @@ public class ContentResourceHelper {
 		
 		return false;
 	}
+	
+	
 }

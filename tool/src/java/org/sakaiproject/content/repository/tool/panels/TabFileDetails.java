@@ -87,9 +87,9 @@ public class TabFileDetails extends Panel {
 			
 			add(new CheckBox("copyrightAlert"));
 			
-			RadioGroup<Boolean> access = new RadioGroup<Boolean>("access");
-			Radio access1 = new Radio<Boolean>("access1", new Model<Boolean>(Boolean.valueOf(true)));
-			Radio access2 = new Radio<Boolean>("access2", new Model<Boolean>(Boolean.valueOf(false)));
+			RadioGroup<String> access = new RadioGroup<String>("access");
+			Radio access1 = new Radio<String>("access1", new Model<String>("site"));
+			Radio access2 = new Radio<String>("access2", new Model<String>("public"));
 			access.add(access1);
 			access.add(access2);
 			add(access);

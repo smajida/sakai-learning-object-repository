@@ -34,12 +34,13 @@ public class LearningObject implements Serializable {
 	 */
 	private String displayName;
 	private int copyrightStatus;
+	private String copyrightCustomText;
 	private boolean copyrightAlert;
 	
 	/**
 	 * Access
 	 */
-	private boolean access;
+	private String access;
 	private String dateFrom;
 	private String dateTo;
 	private int fileStatus;

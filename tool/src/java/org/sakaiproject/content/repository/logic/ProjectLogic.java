@@ -28,7 +28,9 @@ import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.content.repository.model.ContentItem;
 import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.model.SearchItem;
+import org.sakaiproject.content.repository.model.TechnicalRequirement;
 import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.event.api.NotificationService;
 import org.sakaiproject.exception.IdUsedException;
@@ -238,7 +240,6 @@ public class ProjectLogic {
 			item.setAuthor(helper.getCreator());
 			item.setModifiedDate(helper.getModifiedDate());
 			
-			//System.out.println(item.toString());
 						
 			items.add(item);
 		}
@@ -308,12 +309,9 @@ public class ProjectLogic {
 			props.addProperty(ResourceProperties.PROP_CREATOR, getCurrentUserDisplayName());
 						
 			//add LO props
-			props.addAll(convertProperties(lo));
+			addLearningObjectProperties(props, lo);
 			
 			System.out.println(props.toString());
-
-			
-			//resource.getPropertiesEdit().set(props);
 			
 			contentHostingService.commitResource(resource, NotificationService.NOTI_NONE);
 			return true;
@@ -397,16 +395,94 @@ public class ProjectLogic {
 	}
 	
 	/**
-	 * Gets all properties in the learning object and converts them into a Properties set
-	 * @param lo
+	 * Adds the props from the LO to the given resource properties
+	 * @param p - the resource props to set the info into
+	 * @param lo - the LO that has the info
 	 * @return
 	 */
-	private Properties convertProperties(LearningObject lo) {
-		Properties p = new Properties();
+	private void addLearningObjectProperties(ResourceProperties p, LearningObject lo) {
 		
-		p.setProperty("VERSION", Integer.toString(lo.getVersion()));
+		//version
+		p.addProperty("VERSION", Integer.toString(lo.getVersion()));
 		
-		return p;
+		//copyrightStatus
+		p.addProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE, Integer.toString(lo.getCopyrightStatus()));
+		
+		//copyrightCustomText
+		p.addProperty(ResourceProperties.PROP_COPYRIGHT, lo.getCopyrightCustomText());
+		
+		//copyrightAlert
+		p.addProperty(ResourceProperties.PROP_COPYRIGHT_ALERT, Boolean.toString(lo.isCopyrightAlert()));
+		
+		//access (TODO, need to set PubView and access etc)
+		
+		//dateFrom (TODO, need to set a Time object here, see if there is a way around it.
+		//dateTo (TODO, need to set a Time object here, see if there is a way around it.
+		
+		//fileStatus
+		p.addProperty("FILE_STATUS", Integer.toString(lo.getVersion()));
+		
+		//publisher
+		p.addProperty("PUBLISHER", lo.getPublisher());
+		
+		//description
+		p.addProperty(ResourceProperties.PROP_DESCRIPTION, lo.getDescription());
+		
+		//resourceType
+		p.addProperty("RESOURCE_TYPE", lo.getResourceType());
+		
+		//environment
+		p.addProperty("ENVIRONMENT", lo.getEnvironment());
+		
+		//intendedAudience
+		p.addProperty("INTENDED_AUDIENCE", lo.getIntendedAudience());
+		
+		//audienceEducation
+		p.addProperty("AUDIENCE_EDUCATION", lo.getAudienceEducation());
+		
+		//engagement
+		p.addProperty("ENGAGEMENT", lo.getEngagement());
+		
+		//interactivity
+		p.addProperty("INTERACTIVITY", lo.getInteractivity());
+		
+		//difficulty
+		p.addProperty("DIFFICULTY", lo.getDifficulty());
+		
+		//assumedKnowledge
+		p.addProperty("ASSUMED_KNOWLEDGE", lo.getAssumedKnowledge());
+		
+		//learningTime
+		p.addProperty("LEARNING_TIME", lo.getLearningTime());
+		
+		//keywords
+		p.addProperty("KEYWORDS", lo.getKeywords());
+		
+		//outcomes
+		p.addProperty("OUTCOMES", lo.getOutcomes());
+		
+		//tech req (allows multiple, iterate over each and add a numbered set)
+
+		//so that search works across all props we store the same attributes of each object into a properties list 
+		//so that our object reconstructor works, we serialise the list of objects into xml and store that and then reconstruct it later. 
+		//it is duplicated but it is required in order to keep the structure
+		//we do not index the serialised field though.
+		//in search:
+		//customProperties.add("TSEARCH_INDEX.ACTUAL_PROPERTY_NAME"); ie
+		//customProperties.add("Ttech_req_type.TECH_REQ_TYPE");
+		for(TechnicalRequirement tr: lo.getTechReqs()) {
+			p.addPropertyToList("TECH_REQ_TYPE", tr.getTechReqType());
+			p.addPropertyToList("TECH_REQ_NAME", tr.getTechReqName());
+			p.addPropertyToList("TECH_REQ_MIN_VERSION", tr.getTechReqMinVersion());
+			p.addPropertyToList("TECH_REQ_MAX_VERSION", tr.getTechReqMaxVersion());
+			p.addPropertyToList("TECH_REQ_ANDOR", tr.getTechReqAndOr());
+			p.addPropertyToList("TECH_REQ_INSTALL_REMARKS", tr.getTechReqInstallRemarks());
+			p.addPropertyToList("TECH_REQ_OTHER", tr.getTechReqOther());
+			
+			//TODO now serialise into a separate field so we can keep the structure
+			
+		}
+		
 	}
 	
 	
