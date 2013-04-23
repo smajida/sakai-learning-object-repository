@@ -5,17 +5,24 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.content.repository.logic.ProjectLogic;
 import org.sakaiproject.content.repository.logic.ProjectUtils;
 import org.sakaiproject.content.repository.model.ContentItem;
+import org.sakaiproject.content.repository.model.FormMode;
 import org.sakaiproject.content.repository.tool.RepositoryApp;
 import org.sakaiproject.content.repository.tool.components.ExternalImage;
+import org.sakaiproject.content.repository.tool.components.JavascriptEventConfirmation;
+import org.sakaiproject.content.repository.tool.pages.ContentItemPage;
 
 /**
  * Panel for browsing. Takes an optional filter string.
@@ -46,6 +53,7 @@ public class BrowsePanel extends Panel{
 		
 		//display results
 		PageableListView list = new PageableListView<ContentItem>("data", items, RepositoryApp.MAX_CONTENT_ITEMS_PER_PAGE) {			
+			
 			protected void populateItem(final ListItem<ContentItem> item) {
 				ContentItem ci = (ContentItem)item.getModelObject();
 				
@@ -55,6 +63,26 @@ public class BrowsePanel extends Panel{
 				item.add(new Label("author", logic.getUserDisplayName(ci.getAuthor())));
 				item.add(new Label("modifiedDate", ProjectUtils.toDateStringFromResources(ci.getModifiedDate())));
 				item.add(new Label("size", ProjectUtils.formatSize(ci.getSize())));
+				
+				
+				item.add(new Link<String>("editLink", new Model<String>(ci.getId())) {
+					private static final long serialVersionUID = 1L;
+					public void onClick() {
+						String id = (String) getDefaultModelObject();
+						setResponsePage(new ContentItemPage(FormMode.EDIT, id));
+					}
+				});
+				
+				//link to remove item
+				Form remove = new Form("remove");
+                RemoveLink removeLink = new RemoveLink("removeLink", ci.getId());
+                removeLink.add(new JavascriptEventConfirmation("onclick", getString("action.confirm.remove.lo")));
+                remove.add(removeLink);
+                item.add(remove);
+				
+				
+				//.add(new ExternalImage("icon", getImageUrl(ci.getMimeType()))));
+				//item.add(new ExternalLink("titleLink", ci.getUrl()).add(new Label("title", ci.getTitle())));
 			
 			}
 			
@@ -105,6 +133,32 @@ public class BrowsePanel extends Panel{
 		
 		return RepositoryApp.CONTENT_IMAGE_BASE_URL + imageRef;
 		
+	}
+	
+	//link for removing an attribute
+	private class RemoveLink extends SubmitLink {
+	
+		private String resourceId;
+		
+		public RemoveLink(String id, String resourceId) {
+			super(id);
+			this.resourceId=resourceId;
+		}
+		
+		@Override
+		public void onSubmit() {
+						
+			//if(projectLogic.deleteAdditionalAttribute(attributeId)){
+			//	info("Attribute removed successfully.");
+			//} else {
+			//	error("Error removing attribute.");
+			//}
+			
+			System.out.println("ID to remove: " + resourceId);
+			
+			//refresh page
+			//setResponsePage(new AttributesPage());
+		}
 	}
 	
 }

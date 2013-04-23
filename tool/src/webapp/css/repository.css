@@ -1,5 +1,5 @@
 .search-result-wrap {
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 
 .search-result-title {
@@ -36,6 +36,10 @@
 }
 .bold {
 	font-weight: bold;
+}
+
+.padbottom {
+	margin-bottom: 5px;
 }
 
 table.content-form {

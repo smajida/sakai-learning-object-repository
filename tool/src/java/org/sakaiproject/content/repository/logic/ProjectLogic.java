@@ -233,6 +233,7 @@ public class ProjectLogic {
 			}
 			
 			ContentItem item = new ContentItem();
+			item.setId(resource.getId());
 			item.setSize(resource.getContentLength());
 			item.setUrl(resource.getUrl());
 			item.setMimeType(resource.getContentType());
@@ -311,7 +312,7 @@ public class ProjectLogic {
 			//add LO props
 			addLearningObjectProperties(props, lo);
 			
-			System.out.println(props.toString());
+			log.error("PROPS!" + props.toString());
 			
 			contentHostingService.commitResource(resource, NotificationService.NOTI_NONE);
 			return true;
@@ -479,7 +480,11 @@ public class ProjectLogic {
 			p.addPropertyToList("TECH_REQ_INSTALL_REMARKS", tr.getTechReqInstallRemarks());
 			p.addPropertyToList("TECH_REQ_OTHER", tr.getTechReqOther());
 			
-			//TODO now serialise into a separate field so we can keep the structure
+			//serialise object into a separate field so we can keep the structure, add to list since we can have multiples
+			String xml = XMLHelper.serialise(tr);
+			if(StringUtils.isNotBlank(xml)) {
+				p.addPropertyToList("TECH_REQ_XML", xml);
+			}
 			
 		}
 		

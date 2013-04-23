@@ -37,10 +37,11 @@ public class ContentItemPage extends BasePage {
 	}
 	
 	/**
-	 * Constructor if we are using this page for any other purpose
-	 * @param mode
+	 * Constructor if we are using this page for editing.
+	 * @param mode 			FormMode.EDIT
+	 * @param resourceId 	id of the resource in CHS that we want to edit
 	 */
-	public ContentItemPage(FormMode mode) {
+	public ContentItemPage(FormMode mode, String resourceId) {
 		this.mode=mode;
 		
 		//TODO set the properid so we can get the correct learning object here
@@ -61,8 +62,6 @@ public class ContentItemPage extends BasePage {
 		
 		doRender(lo);
 	}
-	
-	//TODO need constructor that takes the selectedTab int
 	
 	
 	private void doRender(final LearningObject lo) {

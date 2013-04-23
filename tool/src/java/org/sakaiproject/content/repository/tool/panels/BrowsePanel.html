@@ -8,6 +8,7 @@
 			<th style="border:none;">&nbsp;</th>
 			<th style="border:none;"><wicket:message key="browse.title" /></th>
 			<th style="border:none;"><wicket:message key="browse.revision" /></th>
+			<th style="border:none;"><wicket:message key="browse.actions" /></th>
 			<th style="border:none;"><wicket:message key="browse.author" /></th>
 			<th style="border:none;"><wicket:message key="browse.modified" /></th>
 			<th style="border:none;"><wicket:message key="browse.size" /></th>
@@ -25,6 +26,11 @@
 				<span wicket:id="revision">[revision]</span>
 			</td>
 			<td>
+				<a wicket:id="editLink"><img src="/library/image/silk/pencil.png"/></a>
+				&nbsp;&nbsp;
+				<form wicket:id="remove"><a wicket:id="removeLink"><img src="/library/image/silk/cross.png"/></a></form>
+			</td>
+			<td>
 				<span wicket:id="author">[author]</span>
 			</td>
 			<td>
@@ -33,6 +39,7 @@
 			<td>
 				<span wicket:id="size">[size]</span>
 			</td>
+			
 			
 		</tr>
 	</tbody>

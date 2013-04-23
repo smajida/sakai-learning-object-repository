@@ -1,21 +1,14 @@
 
 <wicket:panel>
 
-<div wicket:id="count">[num results]</div>
+<div wicket:id="count" class="padbottom">[num results]</div>
 
-<table cellspacing="0">
-	
-	<tbody>
-		<!--  can this be  set of divs/paras instead of a table? check the component -->
-		<tr wicket:id="data" class="search-result-wrap">
-			<td>
-				<a wicket:id="link"><span wicket:id="title" class="search-result-title">[title]</span></a>
-				<div wicket:id="location" class="search-result-url">[location]</div>
-				<div wicket:id="preview" class="search-result-preview">[preview]</div>
-			</td>
-		</tr>
-	</tbody>
-	
-</table>
+<div wicket:id="data" class="search-result-wrap">
+	<div>
+		<a wicket:id="link"><span wicket:id="title" class="search-result-title">[title]</span></a>
+		<div wicket:id="location" class="search-result-url">[location]</div>
+		<div wicket:id="preview" class="search-result-preview">[preview]</div>
+	</div>
+</div>
 
 </wicket:panel>

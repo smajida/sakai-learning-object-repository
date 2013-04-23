@@ -16,6 +16,7 @@ import lombok.ToString;
 @ToString
 public class ContentItem implements Serializable {
 
+	private String id;
 	private String title;
 	private String url;
 	private long size;
