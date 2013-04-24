@@ -35,6 +35,14 @@ public class ContentResourceHelper {
 	}
 	
 	/**
+	 * Get the description property for the resource
+	 * @return
+	 */
+	protected String getDescription() {
+		return resource.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
+	}
+	
+	/**
 	 * Get the modified date property for the resource
 	 * @return
 	 */
@@ -42,13 +50,6 @@ public class ContentResourceHelper {
 		return resource.getProperties().getProperty(ResourceProperties.PROP_MODIFIED_DATE);
 	}
 	
-	/**
-	 * Get the revision property for the resource
-	 * @return
-	 */
-	protected int getRevision() {
-		return NumberUtils.toInt(resource.getProperties().getProperty(ResourceProperties.PROP_MODIFIED_DATE), 0);
-	}
 	
 	/**
 	 * Check if the given content resource item matches the supplied filter

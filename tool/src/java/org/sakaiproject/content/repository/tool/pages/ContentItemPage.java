@@ -25,13 +25,14 @@ import org.sakaiproject.content.repository.tool.panels.TabTechReqs;
 public class ContentItemPage extends BasePage {
 
 	private FormMode mode;
-	private int selectedTab = 0; //first tab, default
+	private int selectedTab; 
 	
 	/**
 	 * Default constructor if we launch the page normally. We will be adding a new content item
 	 */
 	public ContentItemPage() {
-		mode = FormMode.ADD;
+		this.mode = FormMode.ADD;
+		this.selectedTab=0;
 		LearningObject lo = new LearningObject();
 		doRender(lo);
 	}
@@ -43,9 +44,10 @@ public class ContentItemPage extends BasePage {
 	 */
 	public ContentItemPage(FormMode mode, String resourceId) {
 		this.mode=mode;
+		this.selectedTab=0;
 		
-		//TODO set the properid so we can get the correct learning object here
-		LearningObject lo = new LearningObject();
+		//get the LO for this resourceId
+		LearningObject lo = logic.getLearningObject(resourceId);
 		
 		doRender(lo);
 	}
@@ -72,15 +74,12 @@ public class ContentItemPage extends BasePage {
 		// list of tabs
 		List<ITab> tabs=new ArrayList<ITab>();
 		
-		//only show file upload tab if we are adding a file
-		if(mode == FormMode.ADD) {
-			tabs.add(new AbstractTab(new ResourceModel("tab.title.file")) {
-				public Panel getPanel(String panelId) {
-					return new TabFileDetails(panelId, lo, mode);
-				}
-			});
-		}
 		
+		tabs.add(new AbstractTab(new ResourceModel("tab.title.file")) {
+			public Panel getPanel(String panelId) {
+				return new TabFileDetails(panelId, lo, mode);
+			}
+		});
 		
 		tabs.add(new AbstractTab(new ResourceModel("tab.title.lo")) {
 			public Panel getPanel(String panelId) {
@@ -108,7 +107,6 @@ public class ContentItemPage extends BasePage {
 
 		TabbedPanel tabbedPanel = new TabbedPanel("tabs", tabs);
 		tabbedPanel.setSelectedTab(selectedTab);
-		
 		
 		add(tabbedPanel);
 		

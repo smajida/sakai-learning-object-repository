@@ -22,6 +22,7 @@ import org.sakaiproject.content.repository.model.FormMode;
 import org.sakaiproject.content.repository.tool.RepositoryApp;
 import org.sakaiproject.content.repository.tool.components.ExternalImage;
 import org.sakaiproject.content.repository.tool.components.JavascriptEventConfirmation;
+import org.sakaiproject.content.repository.tool.pages.BrowsePage;
 import org.sakaiproject.content.repository.tool.pages.ContentItemPage;
 
 /**
@@ -148,16 +149,14 @@ public class BrowsePanel extends Panel{
 		@Override
 		public void onSubmit() {
 						
-			//if(projectLogic.deleteAdditionalAttribute(attributeId)){
-			//	info("Attribute removed successfully.");
-			//} else {
-			//	error("Error removing attribute.");
-			//}
-			
-			System.out.println("ID to remove: " + resourceId);
+			if(logic.deleteResource(resourceId)){
+				info("Resource removed.");
+			} else {
+				error("Error removing resource.");
+			}
 			
 			//refresh page
-			//setResponsePage(new AttributesPage());
+			setResponsePage(new BrowsePage());
 		}
 	}
 	

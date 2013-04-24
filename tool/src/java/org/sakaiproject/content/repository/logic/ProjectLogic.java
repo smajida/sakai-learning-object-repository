@@ -33,7 +33,11 @@ import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.event.api.NotificationService;
+import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.IdUsedException;
+import org.sakaiproject.exception.InUseException;
+import org.sakaiproject.exception.PermissionException;
+import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.search.api.InvalidSearchQueryException;
 import org.sakaiproject.search.api.SearchList;
 import org.sakaiproject.search.api.SearchResult;
@@ -265,13 +269,35 @@ public class ProjectLogic {
 	
 	/**
 	 * Get a learning object
-	 * @param id - id of the object in CHS
+	 * @param resourceId - id of the resource in CHS
 	 * @return
 	 */
-	public LearningObject getLearningObject(String id) {
+	public LearningObject getLearningObject(String resourceId) {
 		
-		//find a LO by its id
-		return new LearningObject();
+		if(StringUtils.isBlank(resourceId)) {
+			log.error("Cannot retrieve resource, id was blank");
+			return null;
+		}
+		
+		//get the resource
+		ContentResource resource = null;
+		try {
+			resource = contentHostingService.getResource(resourceId);
+		} catch (IdUnusedException e) {
+			e.printStackTrace();
+		} catch (TypeException e) {
+			e.printStackTrace();
+		} catch (PermissionException e) {
+			e.printStackTrace();
+		}
+		
+		if(resource == null) {
+			log.error("Cannot retrieve resource, an error occurred");
+			return null;
+		}
+		
+		LearningObject lo = convertResource(resource);
+		return lo;
 				
 	}
 	
@@ -350,6 +376,35 @@ public class ProjectLogic {
 			return null;
 		}
 		return outputPath;
+	}
+	
+	/**
+	 * Delete a resource from CHS
+	 * 
+	 * @param resourceId - the resourceId of the file to delete
+	 * @return
+	 */
+	public boolean deleteResource(String resourceId) {
+		
+		if(StringUtils.isBlank(resourceId)) {
+			log.error("Cannot delete resource, id was blank");
+			return false;
+		}
+		
+		try {
+			contentHostingService.removeResource(resourceId);
+			log.info("User: " + getCurrentUserId() + " removed resource: " + resourceId);
+			return true;
+		} catch (IdUnusedException e) {
+			e.printStackTrace();
+		} catch (TypeException e) {
+			e.printStackTrace();
+		} catch (InUseException e) {
+			e.printStackTrace();
+		} catch (PermissionException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	/**
@@ -488,6 +543,32 @@ public class ProjectLogic {
 			
 		}
 		
+	}
+	
+	/**
+	 * Take a ContentResource item and convert it to a LearningObject
+	 * @param ContentResource
+	 * @return
+	 */
+	private LearningObject convertResource(ContentResource resource) {
+		
+		//init our helper
+		ContentResourceHelper helper = new ContentResourceHelper();
+		helper.setResource(resource);
+		
+		//convert the resource into a learning object
+		//take the basic params
+		LearningObject lo = new LearningObject();
+		lo.setResourceId(resource.getId());
+		lo.setSize(resource.getContentLength());
+		lo.setMimetype(resource.getContentType());
+		lo.setDisplayName(helper.getTitle());
+		
+		lo.setDescription(helper.getDescription());
+		
+		//TODO convert the rest of the props here back into their object equivalents
+		
+		return lo;
 	}
 	
 	

@@ -18,16 +18,19 @@ import lombok.ToString;
 @ToString
 public class LearningObject implements Serializable {
 
-	private String id;
+	/**
+	 * ID of this resource, matches the content resource ID in CHS
+	 */
+	private String resourceId;
 	
 	/**
 	 * File properties
 	 */
-	private String file; //form placeholder
+	private String file; //form placeholder, NEVER used otherwise
 	private long size;
-	private String stashedFilePath; //only used for initial upload
+	private String stashedFilePath; //only used for initial upload, NEVER used afterwards
 	private String mimetype;
-	private String filename;
+	private String filename; //only used for initial upload, NEVER used afterwards
 	
 	/**
 	 * File meta

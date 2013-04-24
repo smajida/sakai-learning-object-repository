@@ -76,10 +76,14 @@ public class TabFileDetails extends Panel {
 			
 			//form fields will automatically math up with the underlying model if their id is the same as the attribute
 			//if not, set new PropertyModel(lom, "someOtherName")
+			if(mode == FormMode.ADD) {
+				uploadField = new FileUploadField("file");
+				uploadField.setOutputMarkupId(true);
+				add(uploadField);
+			}
 			
-			uploadField = new FileUploadField("file");
-			uploadField.setOutputMarkupId(true);
-			add(uploadField);
+			//need to use fragments to switch these fields, see
+			//http://stackoverflow.com/questions/5541315/wicket-replace-label-by-textfield-and-vice-versa
 			
 			add(new TextField("displayName"));
 			
@@ -107,28 +111,32 @@ public class TabFileDetails extends Panel {
 		
 		protected void onSubmit() {
 			
-			//get file that was uploaded
-			FileUpload upload = uploadField.getFileUpload();
-			
-			if (upload == null || upload.getSize() == 0) {
-				error(new StringResourceModel("error.no.file.uploaded", this, null).getString());
-				return;
-			}
-			
 			LearningObject lo = (LearningObject) this.getDefaultModelObject();
-			
-			// set the file data into the learning object
-			lo.setFilename(upload.getClientFileName());
-			lo.setSize(upload.getSize());
-			lo.setMimetype(upload.getContentType());
-			
-			//stash the file so we can deal with it later.
-			String stashedFilePath = logic.stashFile(upload.getBytes());
-			if(StringUtils.isBlank(stashedFilePath)) {
-				error(new StringResourceModel("error.couldnt.stash.file", this, null).getString());
-				return;
+
+			//if adding a new file, process it
+			if(mode == FormMode.ADD) {
+				//get file that was uploaded
+				FileUpload upload = uploadField.getFileUpload();
+				
+				if (upload == null || upload.getSize() == 0) {
+					error(new StringResourceModel("error.no.file.uploaded", this, null).getString());
+					return;
+				}
+				
+				
+				// set the file data into the learning object
+				lo.setFilename(upload.getClientFileName());
+				lo.setSize(upload.getSize());
+				lo.setMimetype(upload.getContentType());
+				
+				//stash the file so we can deal with it later.
+				String stashedFilePath = logic.stashFile(upload.getBytes());
+				if(StringUtils.isBlank(stashedFilePath)) {
+					error(new StringResourceModel("error.couldnt.stash.file", this, null).getString());
+					return;
+				}
+				lo.setStashedFilePath(stashedFilePath);
 			}
-			lo.setStashedFilePath(stashedFilePath);
 			
 			System.out.println(lo.toString());
 			

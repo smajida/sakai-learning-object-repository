@@ -42,6 +42,10 @@
 	margin-bottom: 5px;
 }
 
+.inline {
+	display: inline;
+}
+
 table.content-form {
     border-collapse: collapse;
 }
@@ -111,7 +115,11 @@ table.content-form tr td {
 }
 
 /** feedback panel styles **/
-li.feedbackPanelERROR {
+span.success {
+	padding: 0 !important;
+}
+
+li.feedbackPanelERROR, li.feedbackPanelINFO {
 	list-style-type: none;
 }
 .alertMessage {
