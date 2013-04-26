@@ -536,7 +536,7 @@ public class ProjectLogic {
 			p.addPropertyToList("TECH_REQ_OTHER", tr.getTechReqOther());
 			
 			//serialise object into a separate field so we can keep the structure, add to list since we can have multiples
-			String xml = XMLHelper.serialise(tr);
+			String xml = XMLHelper.serialiseTechReq(tr);
 			if(StringUtils.isNotBlank(xml)) {
 				p.addPropertyToList("TECH_REQ_XML", xml);
 			}

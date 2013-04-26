@@ -1,32 +1,18 @@
 package org.sakaiproject.content.repository.tool.panels;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.Radio;
-import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.form.upload.FileUpload;
-import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.lang.Bytes;
 import org.sakaiproject.content.repository.logic.ProjectLogic;
 import org.sakaiproject.content.repository.model.FormMode;
 import org.sakaiproject.content.repository.model.LearningObject;
-import org.sakaiproject.content.repository.tool.RepositoryApp;
-import org.sakaiproject.content.repository.tool.components.HashMapChoiceRenderer;
 import org.sakaiproject.content.repository.tool.components.HashMapDropdown;
 import org.sakaiproject.content.repository.tool.pages.ContentItemPage;
 
@@ -42,8 +28,8 @@ public class TabLearningObjectDetails extends Panel {
 	private ProjectLogic logic;
 	private FormMode mode;
 	
-	private final int BACK_TAB=0;
-	private final int NEXT_TAB=2;
+	private final int BACK_TAB=1;
+	private final int NEXT_TAB=3;
 		
 	
 	public TabLearningObjectDetails(String id, LearningObject lo, FormMode mode) {
@@ -75,7 +61,6 @@ public class TabLearningObjectDetails extends Panel {
 			add(new TextArea("description"));
 			
 			
-			
 			add(new HashMapDropdown("resourceType", getResourceTypeOptions()));
 			add(new HashMapDropdown("environment", getEnvironmentOptions()));
 			add(new HashMapDropdown("intendedAudience", getIntendedAudienceOptions()));
@@ -88,16 +73,6 @@ public class TabLearningObjectDetails extends Panel {
 			add(new TextArea("keywords"));
 			add(new TextArea("outcomes"));
 
-			add(new Button("back") {
-				@Override
-				public void onSubmit() {
-					LearningObject lo = (LearningObject) this.getDefaultModelObject();
-					System.out.println(lo.toString());
-					setResponsePage(new ContentItemPage(lo, mode, BACK_TAB));
-				}
-			});
-			
-			
 			
 		}
 		

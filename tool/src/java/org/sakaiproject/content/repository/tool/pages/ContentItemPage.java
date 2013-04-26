@@ -7,12 +7,12 @@ import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.ResourceModel;
 import org.sakaiproject.content.repository.model.FormMode;
 import org.sakaiproject.content.repository.model.LearningObject;
-import org.sakaiproject.content.repository.tool.panels.TabFileDetails;
+import org.sakaiproject.content.repository.tool.panels.TabFileMeta;
+import org.sakaiproject.content.repository.tool.panels.TabFileUpload;
 import org.sakaiproject.content.repository.tool.panels.TabLearningObjectDetails;
 import org.sakaiproject.content.repository.tool.panels.TabTechReqs;
 
@@ -67,17 +67,27 @@ public class ContentItemPage extends BasePage {
 	
 	
 	private void doRender(final LearningObject lo) {
-		disableLink(addLink);
+		
+		if(mode == FormMode.ADD) {
+			disableLink(addLink);
+		}
 		
 		addPageTitle();
 		
 		// list of tabs
 		List<ITab> tabs=new ArrayList<ITab>();
 		
+		if(mode == FormMode.ADD) {
+			tabs.add(new AbstractTab(new ResourceModel("tab.title.file.upload")) {
+				public Panel getPanel(String panelId) {
+					return new TabFileUpload(panelId, lo, mode);
+				}
+			});
+		}
 		
-		tabs.add(new AbstractTab(new ResourceModel("tab.title.file")) {
+		tabs.add(new AbstractTab(new ResourceModel("tab.title.file.meta")) {
 			public Panel getPanel(String panelId) {
-				return new TabFileDetails(panelId, lo, mode);
+				return new TabFileMeta(panelId, lo, mode);
 			}
 		});
 		
@@ -93,17 +103,6 @@ public class ContentItemPage extends BasePage {
 			}
 		});
 		
-		
-		//only show if editing or viewing
-		if(mode == FormMode.EDIT) {
-			tabs.add(new AbstractTab(new ResourceModel("tab.title.history")) {
-				public Panel getPanel(String panelId) {
-					return new EmptyPanel(panelId);
-				}
-			});
-		}
-		
- 
 
 		TabbedPanel tabbedPanel = new TabbedPanel("tabs", tabs);
 		tabbedPanel.setSelectedTab(selectedTab);

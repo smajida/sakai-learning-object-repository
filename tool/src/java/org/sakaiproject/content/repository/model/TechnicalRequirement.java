@@ -23,16 +23,16 @@ public class TechnicalRequirement implements Serializable {
 	@Element(name="name", required=false)
 	private String techReqName;
 	
-	@Element(name="minv", required=false)
+	@Element(name="min_version", required=false)
 	private String techReqMinVersion;
 	
-	@Element(name="maxv", required=false)
+	@Element(name="max_version", required=false)
 	private String techReqMaxVersion;
 	
-	@Element(name="andor", required=false)
+	@Element(name="and_or", required=false)
 	private String techReqAndOr;
 	
-	@Element(name="notes", required=false)
+	@Element(name="install_remarks", required=false)
 	private String techReqInstallRemarks;
 	
 	@Element(name="other", required=false)

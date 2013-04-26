@@ -24,6 +24,7 @@ import org.sakaiproject.content.repository.tool.components.ExternalImage;
 import org.sakaiproject.content.repository.tool.components.JavascriptEventConfirmation;
 import org.sakaiproject.content.repository.tool.pages.BrowsePage;
 import org.sakaiproject.content.repository.tool.pages.ContentItemPage;
+import org.sakaiproject.content.repository.tool.pages.HistoryPage;
 
 /**
  * Panel for browsing. Takes an optional filter string.
@@ -56,7 +57,7 @@ public class BrowsePanel extends Panel{
 		PageableListView list = new PageableListView<ContentItem>("data", items, RepositoryApp.MAX_CONTENT_ITEMS_PER_PAGE) {			
 			
 			protected void populateItem(final ListItem<ContentItem> item) {
-				ContentItem ci = (ContentItem)item.getModelObject();
+				final ContentItem ci = (ContentItem)item.getModelObject();
 				
 				item.add(new ExternalLink("iconLink", ci.getUrl()).add(new ExternalImage("icon", getImageUrl(ci.getMimeType()))));
 				item.add(new ExternalLink("titleLink", ci.getUrl()).add(new Label("title", ci.getTitle())));
@@ -71,6 +72,22 @@ public class BrowsePanel extends Panel{
 					public void onClick() {
 						String id = (String) getDefaultModelObject();
 						setResponsePage(new ContentItemPage(FormMode.EDIT, id));
+					}
+				});
+				
+				item.add(new Link<String>("historyLink", new Model<String>(ci.getId())) {
+					private static final long serialVersionUID = 1L;
+					public void onClick() {
+						String id = (String) getDefaultModelObject();
+						setResponsePage(new HistoryPage(id));
+					}
+					
+					@Override
+					public boolean isEnabled() {
+						if(ci.getRevision() > 0) {
+							return true;
+						}
+						return false;
 					}
 				});
 				

@@ -1,21 +1,17 @@
 package org.sakaiproject.content.repository.tool.panels;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.Radio;
-import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -24,38 +20,31 @@ import org.sakaiproject.content.repository.logic.ProjectLogic;
 import org.sakaiproject.content.repository.model.FormMode;
 import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.tool.RepositoryApp;
-import org.sakaiproject.content.repository.tool.components.HashMapChoiceRenderer;
 import org.sakaiproject.content.repository.tool.components.HashMapDropdown;
 import org.sakaiproject.content.repository.tool.pages.ContentItemPage;
 
 /**
- * Panel for the file upload tab
+ * Panel for the file metadata tab
  * 
  * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
  */
-public class TabFileDetails extends Panel {
+public class TabFileMeta extends Panel {
 
 	@SpringBean(name="org.sakaiproject.content.repository.logic.ProjectLogic")
 	private ProjectLogic logic;
 	
-	private boolean fileUploaded;
 	private FormMode mode;
 	
-	private final int NEXT_TAB=1;
+	private final int NEXT_TAB=2;
 
 	
-	
-	public TabFileDetails(String id, LearningObject lo, FormMode mode) {
+	public TabFileMeta(String id, LearningObject lo, FormMode mode) {
 		super(id);
 		this.mode=mode;
 		
 		//add form		
-		add(new UploadForm("form", new CompoundPropertyModel<LearningObject>(lo)));
-		
-		
-		
-		
+		add(new DetailsForm("form", new CompoundPropertyModel<LearningObject>(lo)));
 		
 	}
 
@@ -63,27 +52,11 @@ public class TabFileDetails extends Panel {
 	/**
 	 * Upload form
 	 */
-	private class UploadForm extends Form<Void> {
+	private class DetailsForm extends Form<Void> {
 
-		FileUploadField uploadField;
 		
-		public UploadForm(String id, IModel lom) {
+		public DetailsForm(String id, IModel lom) {
 			super(id, lom);
-			
-			setMaxSize(Bytes.megabytes(RepositoryApp.MAX_FILE_SIZE_MB));
-			setOutputMarkupId(true);
-			setMultiPart(true);
-			
-			//form fields will automatically math up with the underlying model if their id is the same as the attribute
-			//if not, set new PropertyModel(lom, "someOtherName")
-			if(mode == FormMode.ADD) {
-				uploadField = new FileUploadField("file");
-				uploadField.setOutputMarkupId(true);
-				add(uploadField);
-			}
-			
-			//need to use fragments to switch these fields, see
-			//http://stackoverflow.com/questions/5541315/wicket-replace-label-by-textfield-and-vice-versa
 			
 			add(new TextField("displayName"));
 			
@@ -91,6 +64,7 @@ public class TabFileDetails extends Panel {
 			
 			add(new CheckBox("copyrightAlert"));
 			
+			/*
 			RadioGroup<String> access = new RadioGroup<String>("access");
 			Radio access1 = new Radio<String>("access1", new Model<String>("site"));
 			Radio access2 = new Radio<String>("access2", new Model<String>("public"));
@@ -100,6 +74,7 @@ public class TabFileDetails extends Panel {
 
 			add(new TextField("dateFrom"));
 			add(new TextField("dateTo"));
+			*/
 			
 			add(new HashMapDropdown("fileStatus", getFileStatusOptions()));
 
@@ -112,32 +87,6 @@ public class TabFileDetails extends Panel {
 		protected void onSubmit() {
 			
 			LearningObject lo = (LearningObject) this.getDefaultModelObject();
-
-			//if adding a new file, process it
-			if(mode == FormMode.ADD) {
-				//get file that was uploaded
-				FileUpload upload = uploadField.getFileUpload();
-				
-				if (upload == null || upload.getSize() == 0) {
-					error(new StringResourceModel("error.no.file.uploaded", this, null).getString());
-					return;
-				}
-				
-				
-				// set the file data into the learning object
-				lo.setFilename(upload.getClientFileName());
-				lo.setSize(upload.getSize());
-				lo.setMimetype(upload.getContentType());
-				
-				//stash the file so we can deal with it later.
-				String stashedFilePath = logic.stashFile(upload.getBytes());
-				if(StringUtils.isBlank(stashedFilePath)) {
-					error(new StringResourceModel("error.couldnt.stash.file", this, null).getString());
-					return;
-				}
-				lo.setStashedFilePath(stashedFilePath);
-			}
-			
 			System.out.println(lo.toString());
 			
 			setResponsePage(new ContentItemPage(lo, mode, NEXT_TAB));

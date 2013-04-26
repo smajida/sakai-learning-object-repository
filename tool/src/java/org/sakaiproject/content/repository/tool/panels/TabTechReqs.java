@@ -32,7 +32,7 @@ public class TabTechReqs extends Panel {
 	private ProjectLogic logic;
 	
 	private final FormMode mode;
-	private final int BACK_TAB=1;
+	private final int BACK_TAB=2;
 	private final ListEditor<TechnicalRequirement> editor;
 	private LearningObject lo;
 	
@@ -88,64 +88,11 @@ public class TabTechReqs extends Panel {
                 editor.addItem(new TechnicalRequirement());
             }
         }.setDefaultFormProcessing(false));
-       
-        //back button
-        form.add(new Button("back") {
-			@Override
-			public void onSubmit() {
-				setResponsePage(new ContentItemPage(lo, mode, BACK_TAB));
-			}
-		}.setDefaultFormProcessing(false));
         
         form.add(editor);
 		
 	}
 
-	
-	/**
-	 * DetailsForm form
-	 */
-	/*
-	private class DetailsForm extends Form<Void> {
-
-		
-		public DetailsForm(String id, IModel lom) {
-			super(id, lom);
-			
-			//form fields will automatically math up with the underlying model if their id is the same as the attribute
-			//if not, set new PropertyModel(lom, "someOtherName")
-			
-			add(new HashMapDropdown("techReqType", getTechReqOptions()));
-			add(new TextField("techReqName"));
-			add(new TextField("techReqMinVersion"));
-			add(new TextField("techReqMaxVersion"));
-			add(new HashMapDropdown("techReqAndOr", getTechAndOrOptions()));
-			add(new TextField("techReqInstallRemarks"));
-			add(new TextField("techReqOther"));			
-			
-			add(new Button("back") {
-				@Override
-				public void onSubmit() {
-					LearningObject lo = (LearningObject) this.getDefaultModelObject();
-					System.out.println(lo.toString());
-					setResponsePage(new ContentItemPage(lo, mode, BACK_TAB));
-				}
-			});
-			
-			
-			
-		}
-		
-		protected void onSubmit() {
-			LearningObject lo = (LearningObject) this.getDefaultModelObject();
-			System.out.println(lo.toString());
-			
-		}
-		
-		
-	}
-	*/
-	
 
 	private LinkedHashMap<Integer,String> getTechReqOptions() {
 		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
