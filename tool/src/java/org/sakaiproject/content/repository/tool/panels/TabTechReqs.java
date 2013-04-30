@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -18,7 +19,6 @@ import org.sakaiproject.content.repository.tool.components.HashMapDropdown;
 import org.sakaiproject.content.repository.tool.components.ListEditor;
 import org.sakaiproject.content.repository.tool.components.ListItem;
 import org.sakaiproject.content.repository.tool.components.RemoveButton;
-import org.sakaiproject.content.repository.tool.pages.ContentItemPage;
 
 /**
  * Panel for the technical requirements tab. Allows multiples
@@ -72,8 +72,8 @@ public class TabTechReqs extends Panel {
                 item.add(new TextField("techReqMinVersion"));
     			item.add(new TextField("techReqMaxVersion"));
     			item.add(new HashMapDropdown("techReqAndOr", getTechAndOrOptions()));
-    			item.add(new TextField("techReqInstallRemarks"));
-    			item.add(new TextField("techReqOther"));		
+    			item.add(new TextArea("techReqInstallRemarks"));
+    			item.add(new TextArea("techReqOther"));		
 
     			item.add(new RemoveButton("remove"));
             }

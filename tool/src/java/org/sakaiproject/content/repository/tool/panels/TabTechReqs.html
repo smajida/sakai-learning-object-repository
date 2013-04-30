@@ -8,7 +8,7 @@
 		<table class="content-form multiple" wicket:id="techReqs">
 			<tr>
 				<td>&nbsp;</td>
-				<td class="right"><input wicket:id="remove" type="submit" wicket:message="value:action.remove"/></td>
+				<td class="right"><input wicket:id="remove" type="image" src="/library/image/silk/cross.png"/></td>
 			</tr>
 			<tr>
 				<td><wicket:message key="label.lo.techreq.type" /></td>
@@ -16,15 +16,15 @@
 			</tr>
 			<tr>
 				<td><wicket:message key="label.lo.techreq.name" /></td>
-				<td><input type="text" wicket:id="techReqName" /></td>
+				<td><input type="text" wicket:id="techReqName" size="60"/></td>
 			</tr>
 			<tr>
 				<td><wicket:message key="label.lo.techreq.min" /></td>
-				<td><input type="text" wicket:id="techReqMinVersion" /></td>
+				<td><input type="text" wicket:id="techReqMinVersion" size="40"/></td>
 			</tr>
 			<tr>
 				<td><wicket:message key="label.lo.techreq.max" /></td>
-				<td><input type="text" wicket:id="techReqMaxVersion" /></td>
+				<td><input type="text" wicket:id="techReqMaxVersion" size="40"/></td>
 			</tr>
 			<tr>
 				<td><wicket:message key="label.lo.techreq.andor" /></td>
@@ -32,11 +32,11 @@
 			</tr>
 			<tr>
 				<td><wicket:message key="label.lo.techreq.install" /></td>
-				<td><input type="text" wicket:id="techReqInstallRemarks" /></td>
+				<td><textarea wicket:id="techReqInstallRemarks" rows="6" cols="60"></textarea></td>
 			</tr>
 			<tr>
 				<td><wicket:message key="label.lo.techreq.other" /></td>
-				<td><input type="text" wicket:id="techReqOther" /></td>
+				<td><textarea wicket:id="techReqOther" rows="6" cols="60"></textarea></td>
 			</tr>
 		</table>
 				

@@ -51,8 +51,9 @@ table.content-form {
 }
 
 table.multiple {
-    margin-bottom: 20px;
-    border-bottom: 1px solid red;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-collapse: separate;
 }
 
 table.content-form tr td {
@@ -124,4 +125,9 @@ li.feedbackPanelERROR, li.feedbackPanelINFO {
 }
 .alertMessage {
 	padding:none !important;
+}
+
+.space-items a {
+	margin-left: 2px;
+	margin-right: 2px;
 }
