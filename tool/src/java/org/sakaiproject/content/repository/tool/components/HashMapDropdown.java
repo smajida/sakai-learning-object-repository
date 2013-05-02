@@ -8,18 +8,19 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
- * Generic dropdown choice component that takes a hashmap
+ * Generic dropdown choice component that takes a hashmap for the options
+ * 
  * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
  */
 public class HashMapDropdown extends DropDownChoice {
 	
-	public HashMapDropdown(String id, final LinkedHashMap<Integer,String> options) {
+	public HashMapDropdown(String id, final LinkedHashMap<?,?> options) {
 		super(id);
 		
 		//model that wraps our options
 		IModel optionsModel = new Model() {
-			public ArrayList<Integer> getObject() {
+			public ArrayList<?> getObject() {
 				 return new ArrayList(options.keySet());
 			} 
 		};
@@ -28,5 +29,6 @@ public class HashMapDropdown extends DropDownChoice {
 		setChoiceRenderer(new HashMapChoiceRenderer(options));
 
 	}
+	
 
 }

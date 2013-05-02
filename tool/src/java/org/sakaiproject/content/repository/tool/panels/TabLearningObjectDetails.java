@@ -11,6 +11,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.content.repository.logic.ProjectLogic;
+import org.sakaiproject.content.repository.logic.ProjectUtils;
 import org.sakaiproject.content.repository.model.FormMode;
 import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.tool.components.HashMapDropdown;
@@ -61,14 +62,14 @@ public class TabLearningObjectDetails extends Panel {
 			add(new TextArea("description"));
 			
 			
-			add(new HashMapDropdown("resourceType", getResourceTypeOptions()));
-			add(new HashMapDropdown("environment", getEnvironmentOptions()));
-			add(new HashMapDropdown("intendedAudience", getIntendedAudienceOptions()));
-			add(new HashMapDropdown("audienceEducation", getAudienceEducationOptions()));
-			add(new HashMapDropdown("engagement", getEngagementOptions()));
-			add(new HashMapDropdown("interactivity", getInteractivityOptions()));
-			add(new HashMapDropdown("difficulty", getDifficultyOptions()));
-			add(new HashMapDropdown("learningTime", getLearningTimeOptions()));
+			add(new HashMapDropdown("resourceType", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
+			add(new HashMapDropdown("environment", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
+			add(new HashMapDropdown("intendedAudience", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
+			add(new HashMapDropdown("audienceEducation", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
+			add(new HashMapDropdown("engagement", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
+			add(new HashMapDropdown("interactivity", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
+			add(new HashMapDropdown("difficulty", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
+			add(new HashMapDropdown("learningTime", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
 			add(new TextArea("assumedKnowledge"));
 			add(new TextArea("keywords"));
 			add(new TextArea("outcomes"));
@@ -86,64 +87,7 @@ public class TabLearningObjectDetails extends Panel {
 		
 	}
 	
-	
 
-	private LinkedHashMap<Integer,String> getResourceTypeOptions() {
-		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
-		options.put(990, new ResourceModel("options.resourcetype.1").getObject().toString());
-		options.put(991, new ResourceModel("options.resourcetype.2").getObject().toString());
-		return options;
-	}
-	
-	private LinkedHashMap<Integer,String> getEnvironmentOptions() {
-		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
-		options.put(990, new ResourceModel("options.environment.1").getObject().toString());
-		options.put(991, new ResourceModel("options.environment.2").getObject().toString());
-		return options;
-	}
-	
-	private LinkedHashMap<Integer,String> getIntendedAudienceOptions() {
-		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
-		options.put(990, new ResourceModel("options.intendedaudience.1").getObject().toString());
-		options.put(991, new ResourceModel("options.intendedaudience.2").getObject().toString());
-		return options;
-	}
-	
-	private LinkedHashMap<Integer,String> getAudienceEducationOptions() {
-		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
-		options.put(990, new ResourceModel("options.audienceeducation.1").getObject().toString());
-		options.put(991, new ResourceModel("options.audienceeducation.2").getObject().toString());
-		return options;
-	}
-	
-	private LinkedHashMap<Integer,String> getEngagementOptions() {
-		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
-		options.put(990, new ResourceModel("options.engagement.1").getObject().toString());
-		options.put(991, new ResourceModel("options.engagement.2").getObject().toString());
-		return options;
-	}
-	
-	private LinkedHashMap<Integer,String> getInteractivityOptions() {
-		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
-		options.put(990, new ResourceModel("options.interactivity.1").getObject().toString());
-		options.put(991, new ResourceModel("options.interactivity.2").getObject().toString());
-		return options;
-	}
-	
-	private LinkedHashMap<Integer,String> getDifficultyOptions() {
-		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
-		options.put(990, new ResourceModel("options.difficulty.1").getObject().toString());
-		options.put(991, new ResourceModel("options.difficulty.2").getObject().toString());
-		return options;
-	}
-	
-	private LinkedHashMap<Integer,String> getLearningTimeOptions() {
-		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
-		options.put(990, new ResourceModel("options.learningtime.1").getObject().toString());
-		options.put(991, new ResourceModel("options.learningtime.2").getObject().toString());
-		return options;
-	}
-	
 	
 
 }

@@ -3,12 +3,11 @@ package org.sakaiproject.content.repository.logic;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.sakaiproject.util.ResourceLoader;
 
 /**
@@ -61,5 +60,34 @@ public class ProjectUtils {
 	public static String formatSize(long size) {
 		return FileUtils.byteCountToDisplaySize(size);
 	}
+	
+	/**
+	 * Using the basename, get the properties for use in a dropdown. Properties come from dropdown_options.properties.
+	 * 
+	 * Format is:
+	 * dropdown.engagement.count=3
+	 * dropdown.engagement.1=active
+	 * dropdown.engagement.1.label=Active
+	 * dropdown.engagement.2=expositive
+	 * dropdown.engagement.2.label=Expositive
+	 * dropdown.engagement.3=mixed
+	 * dropdown.engagement.3.label=Mixed
+	 * @param basename eg dropdown.engagement
+	 * @return map of options based on what we found
+	 */
+	public static LinkedHashMap<?,?> getLabelledDropdownMap(String basename) {
+	
+		LinkedHashMap map = new LinkedHashMap();
+		
+		ResourceLoader rl = new ResourceLoader("dropdown_options");
+		
+		int count = rl.getInt(basename + ".count", 0);
+		for(int i=1;i<=count; i++) {
+			map.put(rl.get(basename + "."  +i), rl.get(basename + "."  + i + ".label"));
+		}
+		
+		return map;
+	}
+	
 	
 }
