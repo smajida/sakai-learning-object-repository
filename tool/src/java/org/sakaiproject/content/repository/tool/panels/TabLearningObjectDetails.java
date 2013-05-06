@@ -1,14 +1,11 @@
 package org.sakaiproject.content.repository.tool.panels;
 
-import java.util.LinkedHashMap;
-
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.content.repository.logic.ProjectLogic;
 import org.sakaiproject.content.repository.logic.ProjectUtils;
@@ -63,13 +60,13 @@ public class TabLearningObjectDetails extends Panel {
 			
 			
 			add(new HashMapDropdown("resourceType", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
-			add(new HashMapDropdown("environment", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
-			add(new HashMapDropdown("intendedAudience", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
-			add(new HashMapDropdown("audienceEducation", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
-			add(new HashMapDropdown("engagement", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
-			add(new HashMapDropdown("interactivity", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
-			add(new HashMapDropdown("difficulty", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
-			add(new HashMapDropdown("learningTime", ProjectUtils.getLabelledDropdownMap("dropdown.learning_resource_type")));
+			add(new HashMapDropdown("environment", ProjectUtils.getLabelledDropdownMap("dropdown.environment")));
+			add(new HashMapDropdown("intendedAudience", ProjectUtils.getLabelledDropdownMap("dropdown.context_level")));
+			add(new HashMapDropdown("audienceEducation", ProjectUtils.getLabelledDropdownMap("dropdown.audience_education")));
+			add(new HashMapDropdown("engagement", ProjectUtils.getLabelledDropdownMap("dropdown.engagement")));
+			add(new HashMapDropdown("interactivity", ProjectUtils.getLabelledDropdownMap("dropdown.interactivity_level")));
+			add(new HashMapDropdown("difficulty", ProjectUtils.getLabelledDropdownMap("dropdown.difficulty")));
+			add(new TextField("learningTime"));
 			add(new TextArea("assumedKnowledge"));
 			add(new TextArea("keywords"));
 			add(new TextArea("outcomes"));

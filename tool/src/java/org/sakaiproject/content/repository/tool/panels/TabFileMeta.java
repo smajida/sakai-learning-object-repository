@@ -1,25 +1,16 @@
 package org.sakaiproject.content.repository.tool.panels;
 
-import java.util.LinkedHashMap;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.form.upload.FileUpload;
-import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.lang.Bytes;
 import org.sakaiproject.content.repository.logic.ProjectLogic;
+import org.sakaiproject.content.repository.logic.ProjectUtils;
 import org.sakaiproject.content.repository.model.FormMode;
 import org.sakaiproject.content.repository.model.LearningObject;
-import org.sakaiproject.content.repository.tool.RepositoryApp;
 import org.sakaiproject.content.repository.tool.components.HashMapDropdown;
 import org.sakaiproject.content.repository.tool.pages.ContentItemPage;
 
@@ -60,7 +51,7 @@ public class TabFileMeta extends Panel {
 			
 			add(new TextField("displayName"));
 			
-			add(new HashMapDropdown("copyrightStatus", getCopyrightOptions()));
+			add(new HashMapDropdown("copyrightStatus", ProjectUtils.getLabelledDropdownMap("dropdown.copyright")));
 			
 			add(new CheckBox("copyrightAlert"));
 			
@@ -76,7 +67,7 @@ public class TabFileMeta extends Panel {
 			add(new TextField("dateTo"));
 			*/
 			
-			add(new HashMapDropdown("fileStatus", getFileStatusOptions()));
+			add(new HashMapDropdown("fileStatus", ProjectUtils.getLabelledDropdownMap("dropdown.status")));
 
 			
 			add(new TextField("publisher"));
@@ -96,21 +87,5 @@ public class TabFileMeta extends Panel {
 		
 	}
 	
-	
-	private LinkedHashMap<Integer,String> getCopyrightOptions() {
-		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
-		options.put(990, new ResourceModel("options.copyright.1").getObject().toString());
-		options.put(991, new ResourceModel("options.copyright.2").getObject().toString());
-		return options;
-	}
-	
-	
-	private LinkedHashMap<Integer,String> getFileStatusOptions() {
-		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
-		options.put(990, new ResourceModel("options.filestatus.1").getObject().toString());
-		options.put(991, new ResourceModel("options.filestatus.2").getObject().toString());
-		return options;
-	}
-
 
 }

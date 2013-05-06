@@ -10,8 +10,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.content.repository.logic.ProjectLogic;
+import org.sakaiproject.content.repository.logic.ProjectUtils;
 import org.sakaiproject.content.repository.model.FormMode;
 import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.model.TechnicalRequirement;
@@ -53,9 +55,9 @@ public class TabTechReqs extends Panel {
 				System.out.println(lo.toString());
 				boolean result = logic.addNewLearningObject(lo);
 				if(result) {
-					info("DONE!");
+					info(new StringResourceModel("success.lo.created", this, null).getString());
 				} else {
-					error("failed, booooo");
+					error(new StringResourceModel("error.failed.add", this, null).getString());
 				}
             }
         };
@@ -67,11 +69,11 @@ public class TabTechReqs extends Panel {
             protected void onPopulateItem(ListItem<TechnicalRequirement> item)
             {
                 item.setModel(new CompoundPropertyModel(item.getModel()));
-                item.add(new HashMapDropdown("techReqType", getTechReqOptions()));
+                item.add(new HashMapDropdown("techReqType", ProjectUtils.getLabelledDropdownMap("dropdown.tech_req_type")));
                 item.add(new TextField("techReqName"));
                 item.add(new TextField("techReqMinVersion"));
     			item.add(new TextField("techReqMaxVersion"));
-    			item.add(new HashMapDropdown("techReqAndOr", getTechAndOrOptions()));
+    			item.add(new HashMapDropdown("techReqAndOr", ProjectUtils.getLabelledDropdownMap("dropdown.andor")));
     			item.add(new TextArea("techReqInstallRemarks"));
     			item.add(new TextArea("techReqOther"));		
 

@@ -57,7 +57,7 @@ public class LearningObject implements Serializable {
 	private String displayName;
 	
 	@Element(name="copyright_status", required=false)
-	private int copyrightStatus;
+	private String copyrightStatus;
 	
 	@Element(name="copyright_custom_text", required=false)
 	private String copyrightCustomText;
@@ -79,7 +79,7 @@ public class LearningObject implements Serializable {
 	private String dateTo;
 	
 	@Element(name="file_status", required=false)
-	private int fileStatus;
+	private String fileStatus;
 	
 	@Element(name="publisher", required=false)
 	private String publisher;

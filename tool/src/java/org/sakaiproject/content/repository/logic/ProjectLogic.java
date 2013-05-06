@@ -332,7 +332,13 @@ public class ProjectLogic {
 			//add standard properties
 			ResourceProperties props = resource.getPropertiesEdit();
 			props.addProperty(ResourceProperties.PROP_CONTENT_TYPE, lo.getMimetype());
-			props.addProperty(ResourceProperties.PROP_DISPLAY_NAME, lo.getFilename());
+			
+			//set displayName as filename, or fall back to actual filename
+			if(StringUtils.isNotBlank(lo.getDisplayName())){
+				props.addProperty(ResourceProperties.PROP_DISPLAY_NAME, lo.getDisplayName());
+			} else {
+				props.addProperty(ResourceProperties.PROP_DISPLAY_NAME, lo.getFilename());
+			}
 			props.addProperty(ResourceProperties.PROP_CREATOR, getCurrentUserDisplayName());
 						
 			//add LO props
@@ -342,7 +348,7 @@ public class ProjectLogic {
 			
 			contentHostingService.commitResource(resource, NotificationService.NOTI_NONE);
 			return true;
-			//populate ID of LO field with resource ID field
+			//populate ID of LO field with resource ID field - no longer necessary?
 			//lo.setId(resource.getId());
 
 		} catch (Exception e) {
@@ -413,6 +419,12 @@ public class ProjectLogic {
 	 * @return byte[] for the file, null if it doesnt exist
 	 */
 	private byte[] retrieveStashedFile(String stashedPath) {
+		
+		if(StringUtils.isBlank(stashedPath)) {
+			log.info("No stashed file, cannot retrieve!");
+			return null;
+		}
+		
 		File f = new File(stashedPath);
 		if(!f.exists()) {
 			return null;
@@ -462,7 +474,7 @@ public class ProjectLogic {
 		p.addProperty("VERSION", Integer.toString(lo.getVersion()));
 		
 		//copyrightStatus
-		p.addProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE, Integer.toString(lo.getCopyrightStatus()));
+		p.addProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE, lo.getCopyrightStatus());
 		
 		//copyrightCustomText
 		p.addProperty(ResourceProperties.PROP_COPYRIGHT, lo.getCopyrightCustomText());
@@ -476,7 +488,7 @@ public class ProjectLogic {
 		//dateTo (TODO, need to set a Time object here, see if there is a way around it.
 		
 		//fileStatus
-		p.addProperty("FILE_STATUS", Integer.toString(lo.getVersion()));
+		p.addProperty("FILE_STATUS", lo.getFileStatus());
 		
 		//publisher
 		p.addProperty("PUBLISHER", lo.getPublisher());
