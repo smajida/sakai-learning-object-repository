@@ -63,7 +63,7 @@ public class TabTechReqs extends Panel {
         };
         add(form);
 	        
-        editor = new ListEditor<TechnicalRequirement>("techReqs", new PropertyModel(this, "lo.techReqs"))
+        editor = new ListEditor<TechnicalRequirement>("techReqs", new PropertyModel(this, "lo.techReqs.techReqs"))
         {
             @Override
             protected void onPopulateItem(ListItem<TechnicalRequirement> item)
@@ -94,22 +94,6 @@ public class TabTechReqs extends Panel {
         form.add(editor);
 		
 	}
-
-
-	private LinkedHashMap<Integer,String> getTechReqOptions() {
-		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
-		options.put(990, new ResourceModel("options.techreq.1").getObject().toString());
-		options.put(991, new ResourceModel("options.techreq.2").getObject().toString());
-		return options;
-	}
-	
-	private LinkedHashMap<Integer,String> getTechAndOrOptions() {
-		LinkedHashMap<Integer,String> options = new LinkedHashMap<Integer, String>();
-		options.put(990, new ResourceModel("options.techandor.1").getObject().toString());
-		options.put(991, new ResourceModel("options.techandor.2").getObject().toString());
-		return options;
-	}
-	
 	
 
 }

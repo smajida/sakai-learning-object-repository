@@ -29,6 +29,7 @@ import org.sakaiproject.content.repository.model.ContentItem;
 import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.model.SearchItem;
 import org.sakaiproject.content.repository.model.TechnicalRequirement;
+import org.sakaiproject.content.repository.model.TechnicalRequirementList;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.event.api.EventTrackingService;
@@ -538,7 +539,7 @@ public class ProjectLogic {
 		//in search:
 		//customProperties.add("TSEARCH_INDEX.ACTUAL_PROPERTY_NAME"); ie
 		//customProperties.add("Ttech_req_type.TECH_REQ_TYPE");
-		for(TechnicalRequirement tr: lo.getTechReqs()) {
+		for(TechnicalRequirement tr: lo.getTechReqs().getTechReqs()) {
 			p.addPropertyToList("TECH_REQ_TYPE", tr.getTechReqType());
 			p.addPropertyToList("TECH_REQ_NAME", tr.getTechReqName());
 			p.addPropertyToList("TECH_REQ_MIN_VERSION", tr.getTechReqMinVersion());
@@ -579,6 +580,63 @@ public class ProjectLogic {
 		lo.setDescription(helper.getDescription());
 		
 		//TODO convert the rest of the props here back into their object equivalents
+		ResourceProperties props = resource.getProperties();
+		
+		lo.setVersion(Integer.parseInt(props.getProperty("VERSION")));
+		lo.setCopyrightStatus(props.getProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE));
+		lo.setCopyrightCustomText(props.getProperty(ResourceProperties.PROP_COPYRIGHT));
+		lo.setCopyrightAlert(Boolean.parseBoolean(props.getProperty(ResourceProperties.PROP_COPYRIGHT_ALERT)));
+		lo.setFileStatus(props.getProperty("FILE_STATUS"));
+		lo.setPublisher(props.getProperty("PUBLISHER"));
+		lo.setResourceType(props.getProperty("RESOURCE_TYPE"));
+		lo.setEnvironment(props.getProperty("ENVIRONMENT"));
+		lo.setIntendedAudience(props.getProperty("INTENDED_AUDIENCE"));
+		lo.setAudienceEducation(props.getProperty("AUDIENCE_EDUCATION"));
+		lo.setEngagement(props.getProperty("ENGAGEMENT"));
+		lo.setInteractivity(props.getProperty("INTERACTIVITY"));
+		lo.setDifficulty(props.getProperty("DIFFICULTY"));
+		lo.setAssumedKnowledge(props.getProperty("ASSUMED_KNOWLEDGE"));
+		lo.setLearningTime(props.getProperty("LEARNING_TIME"));
+		lo.setKeywords(props.getProperty("KEYWORDS"));
+		lo.setOutcomes(props.getProperty("OUTCOMES"));
+		
+		//deserialise the list of technical requirements
+		TechnicalRequirementList techReqs = XMLHelper.deserialiseTechReqs(props.getProperty("TECH_REQ_XML"));
+		lo.setTechReqs(techReqs);
+		
+		/*
+		 
+		
+		
+		//tech req (allows multiple, iterate over each and add a numbered set)
+
+		//so that search works across all props we store the same attributes of each object into a properties list 
+		//so that our object reconstructor works, we serialise the list of objects into xml and store that and then reconstruct it later. 
+		//it is duplicated but it is required in order to keep the structure
+		//we do not index the serialised field though.
+		//in search:
+		//customProperties.add("TSEARCH_INDEX.ACTUAL_PROPERTY_NAME"); ie
+		//customProperties.add("Ttech_req_type.TECH_REQ_TYPE");
+		for(TechnicalRequirement tr: lo.getTechReqs()) {
+			p.addPropertyToList("TECH_REQ_TYPE", tr.getTechReqType());
+			p.addPropertyToList("TECH_REQ_NAME", tr.getTechReqName());
+			p.addPropertyToList("TECH_REQ_MIN_VERSION", tr.getTechReqMinVersion());
+			p.addPropertyToList("TECH_REQ_MAX_VERSION", tr.getTechReqMaxVersion());
+			p.addPropertyToList("TECH_REQ_ANDOR", tr.getTechReqAndOr());
+			p.addPropertyToList("TECH_REQ_INSTALL_REMARKS", tr.getTechReqInstallRemarks());
+			p.addPropertyToList("TECH_REQ_OTHER", tr.getTechReqOther());
+			
+			//serialise object into a separate field so we can keep the structure, add to list since we can have multiples
+			String xml = XMLHelper.serialiseTechReq(tr);
+			if(StringUtils.isNotBlank(xml)) {
+				p.addPropertyToList("TECH_REQ_XML", xml);
+			}
+			
+		}
+		 
+		 
+		 */
+		
 		
 		return lo;
 	}

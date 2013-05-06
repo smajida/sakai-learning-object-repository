@@ -4,6 +4,7 @@ import java.io.StringWriter;
 
 import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.model.TechnicalRequirement;
+import org.sakaiproject.content.repository.model.TechnicalRequirementList;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
@@ -37,13 +38,13 @@ public class XMLHelper {
 	 * @param xml
 	 * @return
 	 */
-	protected static TechnicalRequirement deserialiseTechReq(String xml) {
+	protected static TechnicalRequirementList deserialiseTechReqs(String xml) {
 		
 		Serializer serializer = new Persister();
 
 		try {
-			TechnicalRequirement tr = serializer.read(TechnicalRequirement.class, xml);
-			return tr;
+			TechnicalRequirementList trl = serializer.read(TechnicalRequirementList.class, xml);
+			return trl;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
