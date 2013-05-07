@@ -18,19 +18,20 @@ public class XMLHelper {
 
 	/**
 	 * Serialise obj to xml
-	 * @param tr TechnicalRequirement
+	 * @param trl TechnicalRequirementList
 	 * @return
 	 */
-	protected static String serialiseTechReq(TechnicalRequirement tr) {
+	protected static String serialiseTechReq(TechnicalRequirementList trl) {
 		
 		StringWriter writer = new StringWriter();
 		Serializer serializer = new Persister();
 		try {
-			serializer.write(tr, writer);
+			serializer.write(trl, writer);
+			writer.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return writer.toString();
+		return null;
 	}
 	
 	/**
@@ -48,7 +49,7 @@ public class XMLHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return new TechnicalRequirementList(); //dont return null, it blows up ;)
 	}
 	
 	/**

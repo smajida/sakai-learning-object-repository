@@ -546,14 +546,14 @@ public class ProjectLogic {
 			p.addPropertyToList("TECH_REQ_MAX_VERSION", tr.getTechReqMaxVersion());
 			p.addPropertyToList("TECH_REQ_ANDOR", tr.getTechReqAndOr());
 			p.addPropertyToList("TECH_REQ_INSTALL_REMARKS", tr.getTechReqInstallRemarks());
-			p.addPropertyToList("TECH_REQ_OTHER", tr.getTechReqOther());
+			p.addPropertyToList("TECH_REQ_OTHER", tr.getTechReqOther());			
 			
-			//serialise object into a separate field so we can keep the structure, add to list since we can have multiples
-			String xml = XMLHelper.serialiseTechReq(tr);
-			if(StringUtils.isNotBlank(xml)) {
-				p.addPropertyToList("TECH_REQ_XML", xml);
-			}
-			
+		}
+		
+		//serialise whole object into a separate field so we can keep the structure, add to list since we can have multiples
+		String xml = XMLHelper.serialiseTechReq(lo.getTechReqs());
+		if(StringUtils.isNotBlank(xml)) {
+			p.addPropertyToList("TECH_REQ_XML", xml);
 		}
 		
 	}
@@ -582,7 +582,11 @@ public class ProjectLogic {
 		//TODO convert the rest of the props here back into their object equivalents
 		ResourceProperties props = resource.getProperties();
 		
-		lo.setVersion(Integer.parseInt(props.getProperty("VERSION")));
+		if(NumberUtils.isNumber(props.getProperty("VERSION"))) {
+			lo.setVersion(Integer.parseInt(props.getProperty("VERSION")));
+		} else {
+			lo.setVersion(0);
+		}
 		lo.setCopyrightStatus(props.getProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE));
 		lo.setCopyrightCustomText(props.getProperty(ResourceProperties.PROP_COPYRIGHT));
 		lo.setCopyrightAlert(Boolean.parseBoolean(props.getProperty(ResourceProperties.PROP_COPYRIGHT_ALERT)));

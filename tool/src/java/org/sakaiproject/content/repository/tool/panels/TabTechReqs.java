@@ -1,7 +1,5 @@
 package org.sakaiproject.content.repository.tool.panels;
 
-import java.util.LinkedHashMap;
-
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -9,7 +7,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.content.repository.logic.ProjectLogic;
@@ -21,6 +18,7 @@ import org.sakaiproject.content.repository.tool.components.HashMapDropdown;
 import org.sakaiproject.content.repository.tool.components.ListEditor;
 import org.sakaiproject.content.repository.tool.components.ListItem;
 import org.sakaiproject.content.repository.tool.components.RemoveButton;
+import org.sakaiproject.content.repository.tool.pages.BrowsePage;
 
 /**
  * Panel for the technical requirements tab. Allows multiples
@@ -56,6 +54,7 @@ public class TabTechReqs extends Panel {
 				boolean result = logic.addNewLearningObject(lo);
 				if(result) {
 					info(new StringResourceModel("success.lo.created", this, null).getString());
+					setResponsePage(new BrowsePage());
 				} else {
 					error(new StringResourceModel("error.failed.add", this, null).getString());
 				}
