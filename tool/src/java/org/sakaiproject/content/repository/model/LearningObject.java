@@ -129,7 +129,7 @@ public class LearningObject implements Serializable {
 	 * Technical requirements
 	 */
 	@Element(name="techreqs", required=false)
-	public TechnicalRequirementList techReqs;
+	public TechnicalRequirementList techReqs = new TechnicalRequirementList();
 	
 	
 }
