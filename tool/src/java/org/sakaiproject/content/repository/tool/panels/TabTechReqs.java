@@ -30,68 +30,68 @@ public class TabTechReqs extends Panel {
 
 	@SpringBean(name="org.sakaiproject.content.repository.logic.ProjectLogic")
 	private ProjectLogic logic;
-	
+
 	private final FormMode mode;
 	private final ListEditor<TechnicalRequirement> editor;
 	private LearningObject lo;
-	
+
 	public TabTechReqs(String id, LearningObject data, FormMode formMode) {
 		super(id);
 		this.mode=formMode;
 		this.lo=data;
-		
-		//add form		
-		//add(new DetailsForm("form", new CompoundPropertyModel<LearningObject>(lo)));
-		
-		Form form = new Form("form")
-        {
-            @Override
-            protected void onSubmit()
-            {
-            	//LearningObject lo = (LearningObject) this.getDefaultModelObject();
-				System.out.println(lo.toString());
-				boolean result = logic.addNewLearningObject(lo);
-				if(result) {
-					info(new StringResourceModel("success.lo.created", this, null).getString());
-					setResponsePage(new BrowsePage());
-				} else {
-					error(new StringResourceModel("error.failed.add", this, null).getString());
+
+		Form form = new Form("form") {
+			@Override
+			protected void onSubmit() {
+
+				if(mode == FormMode.ADD) {
+					boolean result = logic.addNewLearningObject(lo);
+					if(result) {
+						info(new StringResourceModel("success.lo.created", this, null).getString());
+						setResponsePage(new BrowsePage());
+					} else {
+						error(new StringResourceModel("error.failed.add", this, null).getString());
+					}
 				}
-            }
-        };
-        add(form);
-	        
-        editor = new ListEditor<TechnicalRequirement>("techReqs", new PropertyModel(this, "lo.techReqs.techReqs"))
-        {
-            @Override
-            protected void onPopulateItem(ListItem<TechnicalRequirement> item)
-            {
-                item.setModel(new CompoundPropertyModel(item.getModel()));
-                item.add(new HashMapDropdown("techReqType", ProjectUtils.getLabelledDropdownMap("dropdown.tech_req_type")));
-                item.add(new TextField("techReqName"));
-                item.add(new TextField("techReqMinVersion"));
-    			item.add(new TextField("techReqMaxVersion"));
-    			item.add(new HashMapDropdown("techReqAndOr", ProjectUtils.getLabelledDropdownMap("dropdown.andor")));
-    			item.add(new TextArea("techReqInstallRemarks"));
-    			item.add(new TextArea("techReqOther"));		
+				
+				if(mode == FormMode.EDIT) {
+					
+				}
+				
+				
+			}
+		};
+		add(form);
 
-    			item.add(new RemoveButton("remove"));
-            }
-        };
+		editor = new ListEditor<TechnicalRequirement>("techReqs", new PropertyModel(this, "lo.techReqs.techReqs")) {
+			@Override
+			protected void onPopulateItem(ListItem<TechnicalRequirement> item) {
+				item.setModel(new CompoundPropertyModel(item.getModel()));
+				item.add(new HashMapDropdown("techReqType", ProjectUtils.getLabelledDropdownMap("dropdown.tech_req_type")));
+				item.add(new TextField("techReqName"));
+				item.add(new TextField("techReqMinVersion"));
+				item.add(new TextField("techReqMaxVersion"));
+				item.add(new HashMapDropdown("techReqAndOr", ProjectUtils.getLabelledDropdownMap("dropdown.andor")));
+				item.add(new TextArea("techReqInstallRemarks"));
+				item.add(new TextArea("techReqOther"));		
 
-        //add button
-        form.add(new Button("add")
-        {
-            @Override
-            public void onSubmit()
-            {
-                editor.addItem(new TechnicalRequirement());
-            }
-        }.setDefaultFormProcessing(false));
-        
-        form.add(editor);
-		
+				item.add(new RemoveButton("remove"));
+			}
+				};
+
+				//add button
+				form.add(new Button("add")
+				{
+					@Override
+					public void onSubmit()
+					{
+						editor.addItem(new TechnicalRequirement());
+					}
+				}.setDefaultFormProcessing(false));
+
+				form.add(editor);
+
 	}
-	
+
 
 }
