@@ -37,8 +37,6 @@ public class TabFileUpload extends Panel {
 	private boolean fileUploaded;
 	private FormMode mode;
 	
-	private final int NEXT_TAB=1;
-
 	public TabFileUpload(String id, LearningObject lo, FormMode mode) {
 		super(id);
 		this.mode=mode;
@@ -96,8 +94,13 @@ public class TabFileUpload extends Panel {
 			
 			System.out.println(lo.toString());
 			
-			setResponsePage(new ContentItemPage(lo, mode, NEXT_TAB));
+			setResponsePage(new ContentItemPage(lo, mode, getNextTab()));
 						
+		}
+		
+		/** Determine what the next tab is, based on the mode **/
+		private int getNextTab() {
+			return 1;
 		}
 		
 	}

@@ -26,8 +26,6 @@ public class TabLearningObjectDetails extends Panel {
 	private ProjectLogic logic;
 	private FormMode mode;
 	
-	private final int BACK_TAB=1;
-	private final int NEXT_TAB=3;
 		
 	
 	public TabLearningObjectDetails(String id, LearningObject lo, FormMode mode) {
@@ -78,9 +76,16 @@ public class TabLearningObjectDetails extends Panel {
 			LearningObject lo = (LearningObject) this.getDefaultModelObject();
 			System.out.println(lo.toString());
 			
-			setResponsePage(new ContentItemPage(lo, mode, NEXT_TAB));
+			setResponsePage(new ContentItemPage(lo, mode, getNextTab()));
 		}
 		
+		/** Determine what the next tab is, based on the mode **/
+		private int getNextTab() {
+			if(mode == FormMode.ADD) {
+				return 3;
+			}
+			return 2;
+		}
 		
 	}
 	

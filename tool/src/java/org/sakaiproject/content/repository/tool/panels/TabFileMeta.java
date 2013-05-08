@@ -27,9 +27,6 @@ public class TabFileMeta extends Panel {
 	
 	private FormMode mode;
 	
-	private final int NEXT_TAB=2;
-
-	
 	public TabFileMeta(String id, LearningObject lo, FormMode mode) {
 		super(id);
 		this.mode=mode;
@@ -80,10 +77,17 @@ public class TabFileMeta extends Panel {
 			LearningObject lo = (LearningObject) this.getDefaultModelObject();
 			System.out.println(lo.toString());
 			
-			setResponsePage(new ContentItemPage(lo, mode, NEXT_TAB));
+			setResponsePage(new ContentItemPage(lo, mode, getNextTab()));
 						
 		}
 		
+		/** Determine what the next tab is, based on the mode **/
+		private int getNextTab() {
+			if(mode == FormMode.ADD) {
+				return 2;
+			}
+			return 1;
+		}
 		
 	}
 	

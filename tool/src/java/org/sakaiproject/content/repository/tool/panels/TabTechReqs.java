@@ -32,7 +32,6 @@ public class TabTechReqs extends Panel {
 	private ProjectLogic logic;
 	
 	private final FormMode mode;
-	private final int BACK_TAB=2;
 	private final ListEditor<TechnicalRequirement> editor;
 	private LearningObject lo;
 	
