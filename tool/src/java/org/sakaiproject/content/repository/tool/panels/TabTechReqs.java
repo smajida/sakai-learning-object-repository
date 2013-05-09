@@ -47,15 +47,21 @@ public class TabTechReqs extends Panel {
 				if(mode == FormMode.ADD) {
 					boolean result = logic.addNewLearningObject(lo);
 					if(result) {
+						info(new StringResourceModel("success.lo.updated", this, null).getString());
+						setResponsePage(new BrowsePage());
+					} else {
+						error(new StringResourceModel("error.failed.update", this, null).getString());
+					}
+				}
+				
+				if(mode == FormMode.EDIT) {
+					boolean result = logic.updateLearningObject(lo);
+					if(result) {
 						info(new StringResourceModel("success.lo.created", this, null).getString());
 						setResponsePage(new BrowsePage());
 					} else {
 						error(new StringResourceModel("error.failed.add", this, null).getString());
 					}
-				}
-				
-				if(mode == FormMode.EDIT) {
-					
 				}
 				
 				

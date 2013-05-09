@@ -282,15 +282,13 @@ public class ProjectLogic {
 		
 		//get the resource
 		ContentResource resource = null;
+		
 		try {
-			resource = contentHostingService.getResource(resourceId);
-		} catch (IdUnusedException e) {
-			e.printStackTrace();
-		} catch (TypeException e) {
-			e.printStackTrace();
-		} catch (PermissionException e) {
-			e.printStackTrace();
-		}
+      resource = contentHostingService.getResource(resourceId);
+    } catch (IdUnusedException | TypeException | PermissionException e) {
+      e.printStackTrace();
+    }
+		
 		
 		if(resource == null) {
 			log.error("Cannot retrieve resource, an error occurred");
@@ -349,13 +347,102 @@ public class ProjectLogic {
 			
 			contentHostingService.commitResource(resource, NotificationService.NOTI_NONE);
 			return true;
-			//populate ID of LO field with resource ID field - no longer necessary?
-			//lo.setId(resource.getId());
 
 		} catch (Exception e) {
 			
 			contentHostingService.cancelResource(resource);
 			log.error("addNewLearningObject: failed: " + e.getClass() + " : " + e.getMessage());
+			e.printStackTrace();
+		} finally {
+			disableSecurityAdvisor(advisor);
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Update a learning object.
+	 * @param lo the updated learning object data
+	 * @return
+	 */
+	public boolean updateLearningObject(LearningObject updated) {
+		
+		if(updated == null) {
+			log.error("LO was null, cannot update.");
+			return false;
+		}
+		
+		if(StringUtils.isBlank(updated.getResourceId())) {
+			log.error("LO resourceId was null, cannot update.");
+			return false;
+		}
+		
+		String resourceId = updated.getResourceId();
+		
+		//get the original LO for the given resourceId
+		LearningObject original = getLearningObject(resourceId);
+		
+		//serialise it
+		String originalAsXml = XMLHelper.serialiseLearningObject(original);
+		
+		//get the ContentResourceEdit
+		ContentResourceEdit resource = null;
+		try {
+	    resource = (ContentResourceEdit) contentHostingService.getResource(resourceId);
+    } catch (IdUnusedException | TypeException | PermissionException e) {
+	    e.printStackTrace();
+	    return false;
+    }
+		
+		//clear the old properties so we can set the new ones
+		//dont remove VERSION or LO_HISTORY
+		ResourceProperties props = resource.getPropertiesEdit();
+		props.removeProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE);
+		props.removeProperty(ResourceProperties.PROP_COPYRIGHT);
+		props.removeProperty(ResourceProperties.PROP_COPYRIGHT_ALERT);
+		props.removeProperty(ResourceProperties.PROP_DESCRIPTION);
+		props.removeProperty("FILE_STATUS");
+		props.removeProperty("PUBLISHER");
+		props.removeProperty("RESOURCE_TYPE");
+		props.removeProperty("ENVIRONMENT");
+		props.removeProperty("INTENDED_AUDIENCE");
+		props.removeProperty("AUDIENCE_EDUCATION");
+		props.removeProperty("ENGAGEMENT");
+		props.removeProperty("INTERACTIVITY");
+		props.removeProperty("DIFFICULTY");
+		props.removeProperty("ASSUMED_KNOWLEDGE");
+		props.removeProperty("LEARNING_TIME");
+		props.removeProperty("KEYWORDS");
+		props.removeProperty("OUTCOMES");
+		props.removeProperty("LEARNING_TIME");
+		props.removeProperty("TECH_REQ_TYPE");
+		props.removeProperty("TECH_REQ_NAME");
+		props.removeProperty("TECH_REQ_MIN_VERSION");
+		props.removeProperty("TECH_REQ_MAX_VERSION");
+		props.removeProperty("TECH_REQ_ANDOR");
+		props.removeProperty("TECH_REQ_INSTALL_REMARKS");
+		props.removeProperty("TECH_REQ_OTHER");
+		props.removeProperty("TECH_REQ_XML");
+
+		//increment version
+		updated.setVersion(Integer.parseInt(props.getProperty("VERSION") + 1));
+		
+		//add the updated properties
+		addLearningObjectProperties(props, updated);
+		
+		//add the serialised original LO so we can maintain history
+		props.addPropertyToList("LO_HISTORY", originalAsXml);
+		
+		log.error("UPDATED PROPS!" + props.toString());
+		
+		//save it
+		SecurityAdvisor advisor = enableSecurityAdvisor();
+		try {
+			contentHostingService.commitResource(resource, NotificationService.NOTI_NONE);
+			return true;	
+		} catch (Exception e) {
+			contentHostingService.cancelResource(resource);
+			log.error("updatedLearningObject: failed: " + e.getClass() + " : " + e.getMessage());
 			e.printStackTrace();
 		} finally {
 			disableSecurityAdvisor(advisor);
@@ -557,6 +644,7 @@ public class ProjectLogic {
 		}
 		
 	}
+	
 	
 	/**
 	 * Take a ContentResource item and convert it to a LearningObject

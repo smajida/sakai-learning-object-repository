@@ -25,9 +25,8 @@ import lombok.ToString;
 public class LearningObject implements Serializable {
 
 	/**
-	 * ID of this resource, matches the content resource ID in CHS
+	 * ID of this resource, matches the content resource ID in CHS. Not serialised.
 	 */
-	@Element(name="resourceId")
 	private String resourceId;
 	
 	/**
