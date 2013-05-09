@@ -285,7 +285,7 @@ public class ProjectLogic {
 		
 		try {
       resource = contentHostingService.getResource(resourceId);
-    } catch (IdUnusedException | TypeException | PermissionException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
 		
@@ -389,7 +389,7 @@ public class ProjectLogic {
 		ContentResourceEdit resource = null;
 		try {
 	    resource = (ContentResourceEdit) contentHostingService.getResource(resourceId);
-    } catch (IdUnusedException | TypeException | PermissionException e) {
+    } catch (Exception e) {
 	    e.printStackTrace();
 	    return false;
     }
