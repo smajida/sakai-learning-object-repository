@@ -25,6 +25,8 @@ import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.content.api.ContentResourceEdit;
+import org.sakaiproject.content.repository.model.ChangeHistory;
+import org.sakaiproject.content.repository.model.ChangeHistoryList;
 import org.sakaiproject.content.repository.model.ContentItem;
 import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.model.SearchItem;
@@ -108,6 +110,14 @@ public class ProjectLogic {
 	 */
 	public String getCurrentUserId() {
 		return sessionManager.getCurrentSessionUserId();
+	}
+	
+	/**
+	 * Get current user eid
+	 * @return
+	 */
+	public String getCurrentUserEid() {
+		return userDirectoryService.getCurrentUser().getEid();
 	}
 	
 	/**
@@ -383,19 +393,19 @@ public class ProjectLogic {
 		LearningObject original = getLearningObject(resourceId);
 		
 		//serialise it
-		String originalAsXml = XMLHelper.serialiseLearningObject(original);
+		String originalAsXml = XMLHelper.serialiseObject(original);
 		
 		//get the ContentResourceEdit
 		ContentResourceEdit resource = null;
 		try {
-	    resource = (ContentResourceEdit) contentHostingService.getResource(resourceId);
-    } catch (Exception e) {
-	    e.printStackTrace();
-	    return false;
-    }
+			resource = (ContentResourceEdit) contentHostingService.getResource(resourceId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 		
 		//clear the old properties so we can set the new ones
-		//dont remove VERSION or LO_HISTORY
+		//dont remove VERSION or LO_HISTORICAL
 		ResourceProperties props = resource.getPropertiesEdit();
 		props.removeProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE);
 		props.removeProperty(ResourceProperties.PROP_COPYRIGHT);
@@ -423,6 +433,7 @@ public class ProjectLogic {
 		props.removeProperty("TECH_REQ_INSTALL_REMARKS");
 		props.removeProperty("TECH_REQ_OTHER");
 		props.removeProperty("TECH_REQ_XML");
+		props.removeProperty("CHANGE_HISTORY_XML");
 
 		//increment version
 		updated.setVersion(Integer.parseInt(props.getProperty("VERSION") + 1));
@@ -431,7 +442,7 @@ public class ProjectLogic {
 		addLearningObjectProperties(props, updated);
 		
 		//add the serialised original LO so we can maintain history
-		props.addPropertyToList("LO_HISTORY", originalAsXml);
+		props.addPropertyToList("LO_HISTORICAL", originalAsXml);
 		
 		log.error("UPDATED PROPS!" + props.toString());
 		
@@ -638,10 +649,28 @@ public class ProjectLogic {
 		}
 		
 		//serialise whole object into a separate field so we can keep the structure, add to list since we can have multiples
-		String xml = XMLHelper.serialiseTechReq(lo.getTechReqs());
-		if(StringUtils.isNotBlank(xml)) {
-			p.addPropertyToList("TECH_REQ_XML", xml);
+		String tech_req_xml = XMLHelper.serialiseObject(lo.getTechReqs());
+		if(StringUtils.isNotBlank(tech_req_xml)) {
+			p.addPropertyToList("TECH_REQ_XML", tech_req_xml);
 		}
+		
+		//make a new change history item and add to any existing ones, replace the data.
+		ChangeHistoryList chl = lo.getChangeHistoryList();
+		List<ChangeHistory> history = chl.getHistory();
+		
+		ChangeHistory ch = new ChangeHistory();
+		ch.setVersion(lo.getVersion());
+		ch.setModifiedByEid(getCurrentUserEid());
+		ch.setModifiedByDisplayName(getCurrentUserDisplayName());
+		history.add(ch);
+		chl.setHistory(history);
+		
+		//serialise change history, only store one property with the whole list in it
+		String change_history_xml = XMLHelper.serialiseObject(chl);
+		if(StringUtils.isNotBlank(change_history_xml)) {
+			p.addProperty("CHANGE_HISTORY_XML", change_history_xml);
+		}
+		
 		
 	}
 	

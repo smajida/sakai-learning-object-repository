@@ -36,6 +36,12 @@ public class LearningObject implements Serializable {
 	private int version;
 	
 	/**
+	 * Store some more info about different versions
+	 */
+	@Element(name="change_history_list")
+	private ChangeHistoryList changeHistoryList = new ChangeHistoryList();
+	
+	/**
 	 * File properties
 	 */
 	private String file; //form placeholder, NEVER used otherwise, not serialised
@@ -128,7 +134,7 @@ public class LearningObject implements Serializable {
 	 * Technical requirements
 	 */
 	@Element(name="techreqs", required=false)
-	public TechnicalRequirementList techReqs = new TechnicalRequirementList();
+	private TechnicalRequirementList techReqs = new TechnicalRequirementList();
 	
 	
 }

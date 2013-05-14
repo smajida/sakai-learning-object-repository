@@ -2,8 +2,8 @@ package org.sakaiproject.content.repository.logic;
 
 import java.io.StringWriter;
 
+import org.sakaiproject.content.repository.model.ChangeHistoryList;
 import org.sakaiproject.content.repository.model.LearningObject;
-import org.sakaiproject.content.repository.model.TechnicalRequirement;
 import org.sakaiproject.content.repository.model.TechnicalRequirementList;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -18,15 +18,15 @@ public class XMLHelper {
 
 	/**
 	 * Serialise obj to xml
-	 * @param trl TechnicalRequirementList
+	 * @param o Object
 	 * @return
 	 */
-	protected static String serialiseTechReq(TechnicalRequirementList trl) {
+	protected static String serialiseObject(Object o) {
 		
 		StringWriter writer = new StringWriter();
 		Serializer serializer = new Persister();
 		try {
-			serializer.write(trl, writer);
+			serializer.write(o, writer);
 			writer.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -52,22 +52,6 @@ public class XMLHelper {
 		return new TechnicalRequirementList(); //dont return null, it blows up ;)
 	}
 	
-	/**
-	 * Serialise obj to xml
-	 * @param lo LearningObject
-	 * @return
-	 */
-	protected static String serialiseLearningObject(LearningObject lo) {
-		
-		StringWriter writer = new StringWriter();
-		Serializer serializer = new Persister();
-		try {
-			serializer.write(lo, writer);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return writer.toString();
-	}
 	
 	/**
 	 * Deserialise xml to object
@@ -81,6 +65,24 @@ public class XMLHelper {
 		try {
 			LearningObject lo = serializer.read(LearningObject.class, xml);
 			return lo;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Deserialise xml to object
+	 * @param xml
+	 * @return
+	 */
+	protected static ChangeHistoryList deserialiseChangeHistoryList(String xml) {
+		
+		Serializer serializer = new Persister();
+
+		try {
+			ChangeHistoryList chl = serializer.read(ChangeHistoryList.class, xml);
+			return chl;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
