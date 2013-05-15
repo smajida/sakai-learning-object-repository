@@ -1,13 +1,13 @@
 package org.sakaiproject.content.repository.logic;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 import java.util.UUID;
 
 import lombok.Getter;
@@ -26,18 +26,15 @@ import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.content.repository.model.ChangeHistory;
-import org.sakaiproject.content.repository.model.ChangeHistoryList;
 import org.sakaiproject.content.repository.model.ContentItem;
 import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.model.SearchItem;
 import org.sakaiproject.content.repository.model.TechnicalRequirement;
 import org.sakaiproject.content.repository.model.TechnicalRequirementList;
 import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.event.api.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.IdUsedException;
 import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.TypeException;
@@ -86,6 +83,8 @@ public class ProjectLogic {
 	
 	@Getter @Setter
 	private ContentHostingService contentHostingService;
+	
+	public static final String DEFAULT_DATE_TIME_FORMAT = "dd MMMM yyyy HH:mm:ss";
 	
 	
 	/**
@@ -349,8 +348,9 @@ public class ProjectLogic {
 				props.addProperty(ResourceProperties.PROP_DISPLAY_NAME, lo.getFilename());
 			}
 			props.addProperty(ResourceProperties.PROP_CREATOR, getCurrentUserDisplayName());
+			props.addProperty(ResourceProperties.PROP_CREATION_DATE, getCurrentDateFormatted());
 						
-			//add LO props
+			//add general LO props
 			addLearningObjectProperties(props, lo);
 			
 			log.error("PROPS!" + props.toString());
@@ -411,6 +411,8 @@ public class ProjectLogic {
 		props.removeProperty(ResourceProperties.PROP_COPYRIGHT);
 		props.removeProperty(ResourceProperties.PROP_COPYRIGHT_ALERT);
 		props.removeProperty(ResourceProperties.PROP_DESCRIPTION);
+		props.removeProperty(ResourceProperties.PROP_MODIFIED_BY);
+		props.removeProperty(ResourceProperties.PROP_MODIFIED_DATE);
 		props.removeProperty("FILE_STATUS");
 		props.removeProperty("PUBLISHER");
 		props.removeProperty("RESOURCE_TYPE");
@@ -433,7 +435,6 @@ public class ProjectLogic {
 		props.removeProperty("TECH_REQ_INSTALL_REMARKS");
 		props.removeProperty("TECH_REQ_OTHER");
 		props.removeProperty("TECH_REQ_XML");
-		props.removeProperty("CHANGE_HISTORY_XML");
 
 		//increment version
 		updated.setVersion(Integer.parseInt(props.getProperty("VERSION") + 1));
@@ -572,6 +573,10 @@ public class ProjectLogic {
 		//version
 		p.addProperty("VERSION", Integer.toString(lo.getVersion()));
 		
+		//modified props
+		p.addProperty(ResourceProperties.PROP_MODIFIED_BY, getCurrentUserEid());
+		p.addProperty(ResourceProperties.PROP_MODIFIED_DATE, getCurrentDateFormatted());
+		
 		//copyrightStatus
 		p.addProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE, lo.getCopyrightStatus());
 		
@@ -654,22 +659,6 @@ public class ProjectLogic {
 			p.addPropertyToList("TECH_REQ_XML", tech_req_xml);
 		}
 		
-		//make a new change history item and add to any existing ones, replace the data.
-		ChangeHistoryList chl = lo.getChangeHistoryList();
-		List<ChangeHistory> history = chl.getHistory();
-		
-		ChangeHistory ch = new ChangeHistory();
-		ch.setVersion(lo.getVersion());
-		ch.setModifiedByEid(getCurrentUserEid());
-		ch.setModifiedByDisplayName(getCurrentUserDisplayName());
-		history.add(ch);
-		chl.setHistory(history);
-		
-		//serialise change history, only store one property with the whole list in it
-		String change_history_xml = XMLHelper.serialiseObject(chl);
-		if(StringUtils.isNotBlank(change_history_xml)) {
-			p.addProperty("CHANGE_HISTORY_XML", change_history_xml);
-		}
 		
 		
 	}
@@ -760,6 +749,37 @@ public class ProjectLogic {
 		
 		
 		return lo;
+	}
+	
+	/**
+	 * Gets current date as a formatted string. Used for modification dates.
+	 * @return
+	 */
+	private String getCurrentDateFormatted() {
+		Date date = new Date();
+		SimpleDateFormat format = new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT);
+    	return format.format(date);
+	}
+	
+	/**
+	 * Get the change history events for this learning object
+	 * @param lo
+	 * @return
+	 */
+	public List<ChangeHistory> getChangeHistory(LearningObject lo) {
+		
+		//get the resource associated with LO
+		
+		//get the props
+		
+		//get the LO_HISTORICAL values, deserialise them and extract the relevant props to recreate the list
+		
+		//reverse sort it based on date
+		
+		//return
+		
+		return new ArrayList<ChangeHistory>();
+		
 	}
 	
 	

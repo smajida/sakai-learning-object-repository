@@ -2,7 +2,6 @@ package org.sakaiproject.content.repository.logic;
 
 import java.io.StringWriter;
 
-import org.sakaiproject.content.repository.model.ChangeHistoryList;
 import org.sakaiproject.content.repository.model.LearningObject;
 import org.sakaiproject.content.repository.model.TechnicalRequirementList;
 import org.simpleframework.xml.Serializer;
@@ -71,21 +70,4 @@ public class XMLHelper {
 		return null;
 	}
 	
-	/**
-	 * Deserialise xml to object
-	 * @param xml
-	 * @return
-	 */
-	protected static ChangeHistoryList deserialiseChangeHistoryList(String xml) {
-		
-		Serializer serializer = new Persister();
-
-		try {
-			ChangeHistoryList chl = serializer.read(ChangeHistoryList.class, xml);
-			return chl;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 }

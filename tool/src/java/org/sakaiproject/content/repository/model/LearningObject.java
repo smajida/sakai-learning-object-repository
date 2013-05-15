@@ -36,12 +36,6 @@ public class LearningObject implements Serializable {
 	private int version;
 	
 	/**
-	 * Store some more info about different versions
-	 */
-	@Element(name="change_history_list")
-	private ChangeHistoryList changeHistoryList = new ChangeHistoryList();
-	
-	/**
 	 * File properties
 	 */
 	private String file; //form placeholder, NEVER used otherwise, not serialised
