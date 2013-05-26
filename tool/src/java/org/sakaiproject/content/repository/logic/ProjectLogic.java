@@ -782,5 +782,21 @@ public class ProjectLogic {
 		
 	}
 	
+	/**
+	 * Helper to check if the Resources tool exists in this site. This will cause conflicts so the user must be alerted.
+	 * @return true if exists, false otherwise
+	 */
+	public boolean doesResourcesToolExist() {
+		
+		try {
+	    if(siteService.getSite(getCurrentSiteId()).getToolForCommonId("sakai.resources") != null) {
+	    	return true;
+	    }
+    } catch (IdUnusedException e) {
+	    e.printStackTrace();
+    }
+		
+		return false;
+	}
 	
 }

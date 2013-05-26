@@ -11,9 +11,11 @@ import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.content.repository.logic.ProjectLogic;
 
@@ -72,27 +74,37 @@ public class BasePage extends WebPage implements IHeaderContributor {
 		
 		
 		// Add a FeedbackPanel for displaying our messages
-        feedbackPanel = new FeedbackPanel("feedback"){
-        	
-        	@Override
-        	protected Component newMessageDisplayComponent(final String id, final FeedbackMessage message) {
-        		final Component newMessageDisplayComponent = super.newMessageDisplayComponent(id, message);
+    feedbackPanel = new FeedbackPanel("feedback"){
+    	
+    	@Override
+    	protected Component newMessageDisplayComponent(final String id, final FeedbackMessage message) {
+    		final Component newMessageDisplayComponent = super.newMessageDisplayComponent(id, message);
 
-        		if(message.getLevel() == FeedbackMessage.ERROR ||
-        			message.getLevel() == FeedbackMessage.DEBUG ||
-        			message.getLevel() == FeedbackMessage.FATAL ||
-        			message.getLevel() == FeedbackMessage.WARNING){
-        			add(new SimpleAttributeModifier("class", "alertMessage"));
-        		} else if(message.getLevel() == FeedbackMessage.INFO){
-        			add(new SimpleAttributeModifier("class", "success"));        			
-        		} 
+    		if(message.getLevel() == FeedbackMessage.ERROR ||
+    			message.getLevel() == FeedbackMessage.DEBUG ||
+    			message.getLevel() == FeedbackMessage.FATAL ||
+    			message.getLevel() == FeedbackMessage.WARNING){
+    			add(new SimpleAttributeModifier("class", "alertMessage"));
+    		} else if(message.getLevel() == FeedbackMessage.INFO){
+    			add(new SimpleAttributeModifier("class", "success"));        			
+    		} 
 
-        		return newMessageDisplayComponent;
-        	}
-        };
-        add(feedbackPanel); 
+    		return newMessageDisplayComponent;
+    	}
+    };
+    add(feedbackPanel);
+    
+    //add message about resources tool
+    add(new Label("resourcesConflict", new ResourceModel("error.resources.tool.exists")) {
+    	
+    	@Override
+    	public boolean isVisible() {
+    		return logic.doesResourcesToolExist();
+    	}
+    	
+    });
 		
-    }
+	}
 	
 	/**
 	 * Helper to clear the feedbackpanel display.
