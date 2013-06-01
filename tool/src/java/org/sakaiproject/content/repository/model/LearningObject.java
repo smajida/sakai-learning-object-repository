@@ -127,7 +127,7 @@ public class LearningObject implements Serializable {
 	/**
 	 * Technical requirements
 	 */
-	@Element(name="techreqs", required=false)
+	@Element(name="techreqslist", required=false)
 	private TechnicalRequirementList techReqs = new TechnicalRequirementList();
 	
 	

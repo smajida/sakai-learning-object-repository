@@ -6,10 +6,27 @@
 		
 	<h2><wicket:message key="history.page.title">[History]</wicket:message></h2>
 	
-	Item:
-	
-	Table of history:
-	
+	<table cellspacing="0" class="listHier lines">
+		<tbody>
+			<tr>
+				<th style="border:none;"><wicket:message key="history.version" /></th>
+				<th style="border:none;"><wicket:message key="history.date" /></th>
+				<th style="border:none;"><wicket:message key="history.name" /></th>
+			</tr>
+		
+			<tr wicket:id="data">
+				<td>
+					<span wicket:id="version">[version]</span>
+				</td>
+				<td>
+					<span wicket:id="date">[date]</span>
+				</td>
+				<td>
+					<span wicket:id="name">[name]</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 	
 </wicket:extend>
 </body>

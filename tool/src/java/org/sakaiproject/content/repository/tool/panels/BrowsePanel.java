@@ -84,7 +84,7 @@ public class BrowsePanel extends Panel{
 					
 					@Override
 					public boolean isVisible() {
-						if(ci.getRevision() > 0) {
+						if(ci.getRevision() > -1) {
 							return true;
 						}
 						return false;

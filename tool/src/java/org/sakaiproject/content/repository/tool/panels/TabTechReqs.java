@@ -39,6 +39,12 @@ public class TabTechReqs extends Panel {
 		super(id);
 		this.mode=formMode;
 		this.lo=data;
+		
+		//stub out at least one techreq if there are none, so the page has a form to begin with
+		if(lo.getTechReqs().getTechReqs().isEmpty()) {
+			//add a blank one so the page is stubbed
+			lo.getTechReqs().getTechReqs().add(new TechnicalRequirement());
+		}
 
 		Form form = new Form("form") {
 			@Override
@@ -83,19 +89,17 @@ public class TabTechReqs extends Panel {
 
 				item.add(new RemoveButton("remove"));
 			}
-				};
+		};
 
-				//add button
-				form.add(new Button("add")
-				{
-					@Override
-					public void onSubmit()
-					{
-						editor.addItem(new TechnicalRequirement());
-					}
-				}.setDefaultFormProcessing(false));
+		//add button
+		form.add(new Button("add") {
+			@Override
+			public void onSubmit() {
+				editor.addItem(new TechnicalRequirement());
+			}
+		}.setDefaultFormProcessing(false));
 
-				form.add(editor);
+		form.add(editor);
 
 	}
 

@@ -255,6 +255,8 @@ public class ProjectLogic {
 			item.setAuthor(helper.getCreator());
 			item.setModifiedDate(helper.getModifiedDate());
 			
+			ResourceProperties props = resource.getProperties();
+			item.setRevision(Integer.parseInt(props.getProperty("VERSION")));
 						
 			items.add(item);
 		}
@@ -278,6 +280,20 @@ public class ProjectLogic {
 	}
 	
 	/**
+	 * Get the display name of a user by their eid
+	 * 
+	 * @param eid 
+	 * @return
+	 */
+	public String getUserDisplayNameByEid(String eid) {
+		try {
+			return userDirectoryService.getUserByEid(eid).getDisplayName();
+		} catch (UserNotDefinedException e){
+			return eid;
+		}
+	}
+	
+	/**
 	 * Get a learning object
 	 * @param resourceId - id of the resource in CHS
 	 * @return
@@ -293,10 +309,10 @@ public class ProjectLogic {
 		ContentResource resource = null;
 		
 		try {
-      resource = contentHostingService.getResource(resourceId);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+			resource = contentHostingService.getResource(resourceId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		
 		if(resource == null) {
@@ -352,9 +368,7 @@ public class ProjectLogic {
 						
 			//add general LO props
 			addLearningObjectProperties(props, lo);
-			
-			log.error("PROPS!" + props.toString());
-			
+						
 			contentHostingService.commitResource(resource, NotificationService.NOTI_NONE);
 			return true;
 
@@ -398,14 +412,15 @@ public class ProjectLogic {
 		//get the ContentResourceEdit
 		ContentResourceEdit resource = null;
 		try {
-			resource = (ContentResourceEdit) contentHostingService.getResource(resourceId);
+			resource = (ContentResourceEdit) contentHostingService.editResource(resourceId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
 		
 		//clear the old properties so we can set the new ones
-		//dont remove VERSION or LO_HISTORICAL
+		//DO NOT remove any properties that are incremented and stored with the resource
+		//like VERSION or CHANGE_HISTORY_XML
 		ResourceProperties props = resource.getPropertiesEdit();
 		props.removeProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE);
 		props.removeProperty(ResourceProperties.PROP_COPYRIGHT);
@@ -434,19 +449,17 @@ public class ProjectLogic {
 		props.removeProperty("TECH_REQ_ANDOR");
 		props.removeProperty("TECH_REQ_INSTALL_REMARKS");
 		props.removeProperty("TECH_REQ_OTHER");
-		props.removeProperty("TECH_REQ_XML");
+		props.removeProperty("TECH_REQ_LIST_XML");
 
 		//increment version
-		updated.setVersion(Integer.parseInt(props.getProperty("VERSION") + 1));
+		updated.setVersion(Integer.parseInt(props.getProperty("VERSION"))+1);
 		
 		//add the updated properties
 		addLearningObjectProperties(props, updated);
 		
-		//add the serialised original LO so we can maintain history
-		props.addPropertyToList("LO_HISTORICAL", originalAsXml);
-		
-		log.error("UPDATED PROPS!" + props.toString());
-		
+		//add the serialised original LO so we can maintain history - no longer tracked.
+		//props.addPropertyToList("LO_HISTORICAL", originalAsXml);
+						
 		//save it
 		SecurityAdvisor advisor = enableSecurityAdvisor();
 		try {
@@ -573,6 +586,11 @@ public class ProjectLogic {
 		//version
 		p.addProperty("VERSION", Integer.toString(lo.getVersion()));
 		
+		//display name, if not blank
+		if(StringUtils.isNotBlank(lo.getDisplayName())){
+			p.addProperty(ResourceProperties.PROP_DISPLAY_NAME, lo.getDisplayName());
+		} 
+		
 		//modified props
 		p.addProperty(ResourceProperties.PROP_MODIFIED_BY, getCurrentUserEid());
 		p.addProperty(ResourceProperties.PROP_MODIFIED_DATE, getCurrentDateFormatted());
@@ -650,15 +668,26 @@ public class ProjectLogic {
 			p.addPropertyToList("TECH_REQ_ANDOR", tr.getTechReqAndOr());
 			p.addPropertyToList("TECH_REQ_INSTALL_REMARKS", tr.getTechReqInstallRemarks());
 			p.addPropertyToList("TECH_REQ_OTHER", tr.getTechReqOther());			
+		}
+		
+		//serialise whole object into a separate field so we can keep the structure.
+		String tech_req_xml = XMLHelper.serialiseObject(lo.getTechReqs());
+		if(StringUtils.isNotBlank(tech_req_xml)) {
+			p.addProperty("TECH_REQ_LIST_XML", tech_req_xml);
 			
 		}
 		
-		//serialise whole object into a separate field so we can keep the structure, add to list since we can have multiples
-		String tech_req_xml = XMLHelper.serialiseObject(lo.getTechReqs());
-		if(StringUtils.isNotBlank(tech_req_xml)) {
-			p.addPropertyToList("TECH_REQ_XML", tech_req_xml);
-		}
+		//create a changehistory item for this change, serialise and add to persisted property list
+		ChangeHistory ch = new ChangeHistory();
+		ch.setModifiedByEid(getCurrentUserEid());
+		ch.setModifiedDate(getCurrentDateFormatted());
+		ch.setVersion(lo.getVersion());
 		
+		String ch_xml = XMLHelper.serialiseObject(ch);
+		if(StringUtils.isNotBlank(ch_xml)) {
+			//add to the resource property list so it can be stored along with the resource.
+			p.addPropertyToList("CHANGE_HISTORY_XML", ch_xml);
+		}
 		
 		
 	}
@@ -691,7 +720,7 @@ public class ProjectLogic {
 		if(NumberUtils.isNumber(props.getProperty("VERSION"))) {
 			lo.setVersion(Integer.parseInt(props.getProperty("VERSION")));
 		} else {
-			lo.setVersion(0);
+			lo.setVersion(1);
 		}
 		lo.setCopyrightStatus(props.getProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE));
 		lo.setCopyrightCustomText(props.getProperty(ResourceProperties.PROP_COPYRIGHT));
@@ -711,42 +740,12 @@ public class ProjectLogic {
 		lo.setOutcomes(props.getProperty("OUTCOMES"));
 		
 		//deserialise the list of technical requirements
-		TechnicalRequirementList techReqs = XMLHelper.deserialiseTechReqs(props.getProperty("TECH_REQ_XML"));
-		lo.setTechReqs(techReqs);
-		
-		/*
-		 
-		
-		
-		//tech req (allows multiple, iterate over each and add a numbered set)
-
-		//so that search works across all props we store the same attributes of each object into a properties list 
-		//so that our object reconstructor works, we serialise the list of objects into xml and store that and then reconstruct it later. 
-		//it is duplicated but it is required in order to keep the structure
-		//we do not index the serialised field though.
-		//in search:
-		//customProperties.add("TSEARCH_INDEX.ACTUAL_PROPERTY_NAME"); ie
-		//customProperties.add("Ttech_req_type.TECH_REQ_TYPE");
-		for(TechnicalRequirement tr: lo.getTechReqs()) {
-			p.addPropertyToList("TECH_REQ_TYPE", tr.getTechReqType());
-			p.addPropertyToList("TECH_REQ_NAME", tr.getTechReqName());
-			p.addPropertyToList("TECH_REQ_MIN_VERSION", tr.getTechReqMinVersion());
-			p.addPropertyToList("TECH_REQ_MAX_VERSION", tr.getTechReqMaxVersion());
-			p.addPropertyToList("TECH_REQ_ANDOR", tr.getTechReqAndOr());
-			p.addPropertyToList("TECH_REQ_INSTALL_REMARKS", tr.getTechReqInstallRemarks());
-			p.addPropertyToList("TECH_REQ_OTHER", tr.getTechReqOther());
-			
-			//serialise object into a separate field so we can keep the structure, add to list since we can have multiples
-			String xml = XMLHelper.serialiseTechReq(tr);
-			if(StringUtils.isNotBlank(xml)) {
-				p.addPropertyToList("TECH_REQ_XML", xml);
-			}
-			
+		TechnicalRequirementList techReqsList = new TechnicalRequirementList();
+		String techReqListXml = props.getProperty("TECH_REQ_LIST_XML");
+		if(StringUtils.isNotBlank(techReqListXml)) {
+			techReqsList = XMLHelper.deserialiseTechReqs(techReqListXml);
 		}
-		 
-		 
-		 */
-		
+		lo.setTechReqs(techReqsList);
 		
 		return lo;
 	}
@@ -762,23 +761,50 @@ public class ProjectLogic {
 	}
 	
 	/**
-	 * Get the change history events for this learning object
-	 * @param lo
+	 * Get the change history events for this resource Id
+	 * @param resourceId
 	 * @return
 	 */
-	public List<ChangeHistory> getChangeHistory(LearningObject lo) {
+	public List<ChangeHistory> getChangeHistory(String resourceId) {
 		
-		//get the resource associated with LO
+		//get the resource associated with resourceId
+		if(StringUtils.isBlank(resourceId)) {
+			log.error("Cannot retrieve resource, id was blank");
+			return null;
+		}
+		
+		//get the resource
+		ContentResource resource = null;
+		
+		try {
+			resource = contentHostingService.getResource(resourceId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(resource == null) {
+			log.error("Cannot retrieve resource, an error occurred");
+			return null;
+		}
 		
 		//get the props
+		ResourceProperties props = resource.getProperties();
 		
-		//get the LO_HISTORICAL values, deserialise them and extract the relevant props to recreate the list
+		//get the CHANGE_HISTORY_XML values from the resource, deserialise them and extract the relevant props to recreate the list
+		List<String> changeHistoryXml = props.getPropertyList("CHANGE_HISTORY_XML");
+		List<ChangeHistory> historyList = new ArrayList<ChangeHistory>();
+
+		if(!changeHistoryXml.isEmpty()){
+			
+			for(String chXml: changeHistoryXml) {
+				ChangeHistory ch = XMLHelper.deserialiseChangeHistory(chXml);
+				historyList.add(ch);
+			}
+		}
 		
-		//reverse sort it based on date
+		//TODO reverse sort it based on date
 		
-		//return
-		
-		return new ArrayList<ChangeHistory>();
+		return historyList;
 		
 	}
 	

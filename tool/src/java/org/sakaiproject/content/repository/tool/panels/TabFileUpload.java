@@ -84,6 +84,9 @@ public class TabFileUpload extends Panel {
 			lo.setSize(upload.getSize());
 			lo.setMimetype(upload.getContentType());
 			
+			//also set the displayName so we have a value for the FileMeta page.
+			lo.setDisplayName(lo.getFilename());
+			
 			//stash the file so we can deal with it later.
 			String stashedFilePath = logic.stashFile(upload.getBytes());
 			if(StringUtils.isBlank(stashedFilePath)) {

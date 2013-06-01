@@ -15,7 +15,7 @@ import org.simpleframework.xml.Root;
  *
  */
 @Data
-@Root(name="techreqs")
+@Root(name="techreqslist")
 public class TechnicalRequirementList implements Serializable {
 
 	@ElementList(name="techreqs", required=false)
