@@ -27,30 +27,27 @@ public class SimpleSearchPanel extends Panel {
 	Panel resultsPanel;
 	
 	/**
-	 * Constructor for new instance
-	 * @param id	component id
-	 */
-	public SimpleSearchPanel(String id) {
-		super(id);
-		add(new SimpleSearchForm("form", new SimpleSearch()));
-		
-		//no results so add an empty panel
-		resultsPanel = new EmptyPanel("results");
-		add(resultsPanel);
-	}
-	
-	/**
-	 * Constructor if we have data already
+	 * Constructor for performing a search. ss may have a null search string if its a new request
 	 * @param id	component id
 	 * @param ss	simple search object
 	 */
 	public SimpleSearchPanel(String id, SimpleSearch ss) {
 		super(id);
-		add(new SimpleSearchForm("form", ss));
 		
-		//we have a search string stored so get the results and setup the real panel
-		resultsPanel = new SearchResultsPanel("results", logic.performSearch(ss.getSearchString()));
-		add(resultsPanel);
+		if(ss == null || StringUtils.isBlank(ss.getSearchString())) {
+			add(new SimpleSearchForm("form", new SimpleSearch()));
+			
+			//no results so add an empty panel
+			resultsPanel = new EmptyPanel("results");
+			add(resultsPanel);
+		} else {
+		
+			add(new SimpleSearchForm("form", ss));
+			
+			//we have a search string stored so get the results and setup the real panel
+			resultsPanel = new SearchResultsPanel("results", logic.performSearch(ss.getSearchString()));
+			add(resultsPanel);
+		}
 	}
 	
 	/**

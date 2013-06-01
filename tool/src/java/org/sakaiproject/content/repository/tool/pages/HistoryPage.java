@@ -37,7 +37,7 @@ public class HistoryPage extends BasePage {
 				if(!StringUtils.equals(displayName, ch.getModifiedByEid())) {
 					sb.append(displayName);
 				}
-				sb.append("(");
+				sb.append(" (");
 				sb.append(ch.getModifiedByEid());
 				sb.append(")");
 				

@@ -85,7 +85,7 @@ public class ProjectLogic {
 	private ContentHostingService contentHostingService;
 	
 	public static final String DEFAULT_DATE_TIME_FORMAT = "dd MMMM yyyy HH:mm:ss";
-	
+		
 	
 	/**
 	 * init - perform any actions required here for when this bean starts up
@@ -365,7 +365,10 @@ public class ProjectLogic {
 			}
 			props.addProperty(ResourceProperties.PROP_CREATOR, getCurrentUserDisplayName());
 			props.addProperty(ResourceProperties.PROP_CREATION_DATE, getCurrentDateFormatted());
-						
+			
+			//set version to 1 for new files
+			lo.setVersion(1);
+			
 			//add general LO props
 			addLearningObjectProperties(props, lo);
 						
@@ -824,5 +827,103 @@ public class ProjectLogic {
 		
 		return false;
 	}
+	
+	
+	/**
+	 * Takes a learning object and extracts all fields and turns it into a search string
+	 * @param lo
+	 * @return
+	 */
+	public String getAdvancedSearchString(LearningObject lo) {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		
+		if(StringUtils.isNotBlank(lo.getDisplayName())){
+			sb.append(lo.getDisplayName() + " OR ");
+		}
+		if(StringUtils.isNotBlank(lo.getCopyrightStatus())){
+			sb.append("file_status:"+lo.getFileStatus() + " OR ");
+		}
+		if(StringUtils.isNotBlank(lo.getPublisher())){
+			sb.append("publisher:"+lo.getPublisher() + " OR ");
+		}
+		if(StringUtils.isNotBlank(lo.getResourceType())){
+			sb.append("resource_type:"+lo.getResourceType() + " OR ");
+		}
+		if(StringUtils.isNotBlank(lo.getEnvironment())){
+			sb.append("environment:"+lo.getEnvironment() + " OR ");
+		}
+		if(StringUtils.isNotBlank(lo.getIntendedAudience())){
+			sb.append("intended_audience:"+lo.getIntendedAudience() + " OR ");
+		}
+		if(StringUtils.isNotBlank(lo.getAudienceEducation())){
+			sb.append("audience_education:"+lo.getAudienceEducation() + " OR ");
+		}
+		if(StringUtils.isNotBlank(lo.getEngagement())){
+			sb.append("engagement:"+lo.getEngagement() + " OR ");
+		}
+		if(StringUtils.isNotBlank(lo.getInteractivity())){
+			sb.append("interactivity:"+lo.getInteractivity() + " OR ");
+		}
+		if(StringUtils.isNotBlank(lo.getDifficulty())){
+			sb.append("difficulty:"+lo.getDifficulty() + " OR ");
+		}
+		if(StringUtils.isNotBlank(lo.getAssumedKnowledge())){
+			sb.append("assumed_knowledge:"+lo.getAssumedKnowledge() + " OR ");
+		}
+		if(StringUtils.isNotBlank(lo.getLearningTime())){
+			sb.append("learning_time:"+lo.getLearningTime() + " OR ");
+		}
+		if(StringUtils.isNotBlank(lo.getKeywords())){
+			sb.append("keywords:"+lo.getKeywords() + " OR ");
+		}
+		if(StringUtils.isNotBlank(lo.getOutcomes())){
+			sb.append("outcomes:"+lo.getOutcomes() + " OR ");
+		}
+		
+		//we only handle one tech req
+		List<TechnicalRequirement> trs = lo.getTechReqs().getTechReqs();
+		if(!trs.isEmpty()) {
+			
+			TechnicalRequirement tr = trs.get(0);
+		
+			if(StringUtils.isNotBlank(tr.getTechReqType())){
+				sb.append("tech_req_type:"+tr.getTechReqType() + " OR ");
+			}
+			if(StringUtils.isNotBlank(tr.getTechReqName())){
+				sb.append("tech_req_name:"+tr.getTechReqName() + " OR ");
+			}
+			if(StringUtils.isNotBlank(tr.getTechReqMinVersion())){
+				sb.append("tech_req_min_version:"+tr.getTechReqMinVersion() + " OR ");
+			}
+			if(StringUtils.isNotBlank(tr.getTechReqMaxVersion())){
+				sb.append("tech_req_max_version:"+tr.getTechReqMaxVersion() + " OR ");
+			}
+			if(StringUtils.isNotBlank(tr.getTechReqAndOr())){
+				sb.append("tech_req_andor:"+tr.getTechReqAndOr() + " OR ");
+			}
+			if(StringUtils.isNotBlank(tr.getTechReqInstallRemarks())){
+				sb.append("tech_req_install_remarks:"+tr.getTechReqInstallRemarks() + " OR ");
+			}
+			if(StringUtils.isNotBlank(tr.getTechReqOther())){
+				sb.append("tech_req_other:"+tr.getTechReqOther() + " OR ");
+			}
+			
+		}
+		
+		String searchString = sb.toString();
+		
+		System.out.println("Advanced search string: " + searchString);
+				
+		//trim trailing OR and remove whitespace
+		searchString = StringUtils.trim(searchString);
+		searchString = StringUtils.removeEnd(searchString, "OR");
+		searchString = StringUtils.trim(searchString);
+		
+		
+		return searchString;
+	}
+	
 	
 }

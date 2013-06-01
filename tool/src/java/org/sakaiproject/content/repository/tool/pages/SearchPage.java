@@ -1,12 +1,15 @@
 package org.sakaiproject.content.repository.tool.pages;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.ResourceModel;
+import org.sakaiproject.content.repository.model.FormMode;
+import org.sakaiproject.content.repository.model.SimpleSearch;
 import org.sakaiproject.content.repository.tool.panels.SimpleSearchPanel;
 
 /**
- * Search page
+ * Search page. This could be enhanced to use tabs
  * 
  * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
@@ -15,20 +18,33 @@ public class SearchPage extends BasePage {
 
 	private boolean advancedMode=false;
 	
+	private String searchString = null;
+	
+	/**
+	 * Default constructor when performing a new search.
+	 */
 	public SearchPage() {
+		doRender();
+	}
+	
+	public SearchPage(String searchString) {
+		this.searchString = searchString;
+		doRender();
+	}
+	
+	public void doRender() {
 		disableLink(searchLink);
 		
-		if(advancedMode) {
-			//add advanced panel
-			
-		} else {
-			//add simple panel
-			add(new SimpleSearchPanel("searchPanel"));
-
+		SimpleSearch ss = new SimpleSearch();
+		
+		if(StringUtils.isNotBlank(searchString)){
+			//for now just create a SimpelSearch obj and pass in the text
+			ss.setSearchString(searchString);
 		}
 		
-		add(new SwitchModeLink("modeLink"));
+		add(new SimpleSearchPanel("searchPanel", ss));
 		
+		add(new SwitchModeLink("modeLink"));
 	}
 	
 	
@@ -51,13 +67,12 @@ public class SearchPage extends BasePage {
 		@Override
 		public void onClick() {
 			
-			//switch panels to load in the appropriate search form
-
-			if(advancedMode) {
-				//load in simple mode panel
-			}
 			
-			System.out.println("Not yet implemented");
+			//load in the advanced search form
+			//if(advancedMode) {
+				setResponsePage(new ContentItemPage(FormMode.SEARCH));
+			//}
+			
 			
 		}
 		

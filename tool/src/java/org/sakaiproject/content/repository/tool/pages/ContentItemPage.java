@@ -38,6 +38,16 @@ public class ContentItemPage extends BasePage {
 	}
 	
 	/**
+	 * Constructor if we are searching, send in FormMode.SEARCH
+	 */
+	public ContentItemPage(FormMode mode) {
+		this.mode = mode;
+		this.selectedTab=0;
+		LearningObject lo = new LearningObject();
+		doRender(lo);
+	}
+	
+	/**
 	 * Constructor if we are using this page for editing.
 	 * @param mode 			FormMode.EDIT
 	 * @param resourceId 	id of the resource in CHS that we want to edit

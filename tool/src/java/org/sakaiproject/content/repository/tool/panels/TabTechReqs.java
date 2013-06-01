@@ -1,5 +1,6 @@
 package org.sakaiproject.content.repository.tool.panels;
 
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -7,6 +8,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.content.repository.logic.ProjectLogic;
@@ -19,6 +21,7 @@ import org.sakaiproject.content.repository.tool.components.ListEditor;
 import org.sakaiproject.content.repository.tool.components.ListItem;
 import org.sakaiproject.content.repository.tool.components.RemoveButton;
 import org.sakaiproject.content.repository.tool.pages.BrowsePage;
+import org.sakaiproject.content.repository.tool.pages.SearchPage;
 
 /**
  * Panel for the technical requirements tab. Allows multiples
@@ -45,6 +48,7 @@ public class TabTechReqs extends Panel {
 			//add a blank one so the page is stubbed
 			lo.getTechReqs().getTechReqs().add(new TechnicalRequirement());
 		}
+		
 
 		Form form = new Form("form") {
 			@Override
@@ -70,10 +74,22 @@ public class TabTechReqs extends Panel {
 					}
 				}
 				
+				if(mode == FormMode.SEARCH) {
+					System.out.println("Performing advanced search");
+					
+					String searchString = logic.getAdvancedSearchString(lo);
+					
+					setResponsePage(new SearchPage(searchString));
+				}
+				
 				
 			}
 		};
 		add(form);
+		
+		Label instructions = new Label("instructions", new ResourceModel("instruction.lo.techreqs.1"));
+		instructions.setVisible(mode != FormMode.SEARCH);
+		form.add(instructions);
 
 		editor = new ListEditor<TechnicalRequirement>("techReqs", new PropertyModel(this, "lo.techReqs.techReqs")) {
 			@Override
@@ -87,7 +103,9 @@ public class TabTechReqs extends Panel {
 				item.add(new TextArea("techReqInstallRemarks"));
 				item.add(new TextArea("techReqOther"));		
 
-				item.add(new RemoveButton("remove"));
+				RemoveButton r = new RemoveButton("remove");
+				r.setVisible(mode != FormMode.SEARCH);
+				item.add(r);
 			}
 		};
 
@@ -97,6 +115,14 @@ public class TabTechReqs extends Panel {
 			public void onSubmit() {
 				editor.addItem(new TechnicalRequirement());
 			}
+			
+			@Override
+			public boolean isVisible() {
+				//do not display for searching
+				return (mode != FormMode.SEARCH);
+			}
+			
+			
 		}.setDefaultFormProcessing(false));
 
 		form.add(editor);
